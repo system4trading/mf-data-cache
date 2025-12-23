@@ -12,4 +12,10 @@ jobs:
     - name: Run a script from file
       # Ensure the script file (e.g., myscript.sh) exists in your repo
       run: bash ./bashscript.sh
+    - run: |
+        git config user.name "amfi-bot"
+        git config user.email "bot@github.com"
+        git add .
+        git commit -m "Auto update MF & Nifty data" || true
+        git push
     
