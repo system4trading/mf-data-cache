@@ -5,8 +5,6 @@ URL = "https://www.amfiindia.com/spages/NAVAll.txt"
 res = requests.get(URL, timeout=30)
 lines = res.text.splitlines()
 
-hist = scheme_code.history(period="10y")
-
 data = {}
 for line in lines:
     if line.count(";") >= 4 and line[0].isdigit():
