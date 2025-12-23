@@ -1,4 +1,9 @@
 [
   { "code": "120503", "name": "Demo Equity Fund", "category": "Large Cap" }
+  {
+  "code": "120503",
+  "manager": "A. Sharma",
+  "tenure": 7
+  "aumTrend": [12000, 13500, 15000]
+  }
 ]
-
