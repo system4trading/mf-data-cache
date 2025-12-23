@@ -12,7 +12,4 @@ jobs:
     - name: Run a script from file
       # Ensure the script file (e.g., myscript.sh) exists in your repo
       run: bash ./bashscript.sh
-    - run: |
-        git config --global user.name "amfi-bot"
-        git config --global user.email "bot@github.com"
 
