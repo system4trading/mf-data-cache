@@ -1,1 +1,25 @@
+[
+  {
+    "code": "120503",
+    "manager": "Prashant Jain",
+    "tenureYears": 7.4,
+    "aumTrendCr": [18200, 19450, 21300],
+    "expenseRatio": 1.55,
+    "avgPE": 24.6,
+    "avgDividendYield": 1.2,
+    "riskLevel": "Moderate",
+    "benchmark": "NIFTY 50"
+  },
+  {
+    "code": "118989",
+    "manager": "Jinesh Gopani",
+    "tenureYears": 6.1,
+    "aumTrendCr": [9500, 10800, 12400],
+    "expenseRatio": 1.62,
+    "avgPE": 22.1,
+    "avgDividendYield": 1.0,
+    "riskLevel": "Moderate",
+    "benchmark": "NIFTY 50"
+  }
+]
 
