@@ -3,6 +3,14 @@
     "code": "120503",
     "name": "HDFC Top 100 Fund",
     "category": "Equity Large Cap",
-    "yahoo": "120503.BO"
+    "yahoo": "120503.BO",
+    "navFallback": true
+  },
+  {
+    "code": "118989",
+    "name": "Axis Bluechip Fund",
+    "category": "Equity Large Cap",
+    "yahoo": "118989.BO",
+    "navFallback": true
   }
 ]
