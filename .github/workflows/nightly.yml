@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: data-pipeline
+  cancel-in-progress: false
+
 jobs:
   nightly-update:
     runs-on: ubuntu-latest
