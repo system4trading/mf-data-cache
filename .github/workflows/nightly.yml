@@ -36,7 +36,7 @@ jobs:
       - name: Commit & push changes
         run: |
           git config user.name "amfi-bot"
-          git config user.email "amfi-bot@users.noreply.github.com"
+          git config user.email "bot@github.com"
           git pull --rebase origin main
           git add .
           git commit -m "Nightly AMFI & Nifty update" || echo "No changes"
