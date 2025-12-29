@@ -1,87 +1,99 @@
 import fs from "fs";
 import fetch from "node-fetch";
 
-/* -------------------------
-   STEP 1: SAFE INPUT LOAD
--------------------------- */
+const INPUT = "mf_db.json";
+const OUTPUT = "mf_master.json";
+const YAHOO_NAV_DIR = "yahoo_nav";
 
-const INPUT_FILE = "mf_db.json";
-const OUTPUT_FILE = "mf_master.json";
+/* ------------------ SAFE LOAD ------------------ */
+
+if (!fs.existsSync(YAHOO_NAV_DIR)) {
+  fs.mkdirSync(YAHOO_NAV_DIR);
+}
 
 let rawText;
 try {
-  rawText = fs.readFileSync(INPUT_FILE, "utf8");
-} catch (e) {
-  console.error(`❌ ${INPUT_FILE} not found`);
+  rawText = fs.readFileSync(INPUT, "utf8");
+} catch {
+  console.error("❌ mf_db.json not found");
   process.exit(1);
 }
 
-let raw;
+let schemes;
 try {
-  raw = JSON.parse(rawText);
+  schemes = JSON.parse(rawText);
 } catch (e) {
-  console.error(`❌ Invalid JSON in ${INPUT_FILE}`);
+  console.error("❌ Invalid JSON in mf_db.json");
   console.error(e.message);
   process.exit(1);
 }
 
-if (!Array.isArray(raw)) {
-  console.error(`❌ ${INPUT_FILE} must be an array`);
+if (!Array.isArray(schemes)) {
+  console.error("❌ mf_db.json must be an array");
   process.exit(1);
 }
 
-console.log(`📦 Loaded ${raw.length} MF records from ${INPUT_FILE}`);
+console.log(`📦 Loaded ${schemes.length} schemes`);
 
-/* -------------------------
-   STEP 2: YAHOO VALIDATION
--------------------------- */
+/* ------------------ YAHOO HELPERS ------------------ */
 
-async function validateYahoo(symbol) {
-  try {
-    const r = await fetch(
-      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`
-    );
-    const j = await r.json();
-    return !!j.chart?.result;
-  } catch {
-    return false;
-  }
+async function fetchYahooChart(symbol) {
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=1y&interval=1d`;
+  const r = await fetch(url);
+  const j = await r.json();
+  return j.chart?.result?.[0] || null;
 }
 
-/* -------------------------
-   STEP 3: BUILD MF MASTER
--------------------------- */
+function extractNAV(chart) {
+  const ts = chart.timestamp || [];
+  const prices = chart.indicators?.quote?.[0]?.close || [];
+  return ts.map((t, i) => ({
+    date: new Date(t * 1000).toISOString().slice(0, 10),
+    nav: prices[i]
+  })).filter(d => d.nav !== null);
+}
+
+/* ------------------ BUILD MASTER ------------------ */
 
 const result = [];
 
-for (const s of raw) {
-  if (!s.code || !s.name || !s.category) {
-    console.warn(`⚠️ Skipping invalid entry: ${JSON.stringify(s)}`);
-    continue;
-  }
+for (const s of schemes) {
+  if (!s.code || !s.name || !s.category) continue;
 
-  const yahooSymbol = `${s.code}.BO`;
-  const isValidYahoo = await validateYahoo(yahooSymbol);
+  const yahoo = `${s.code}.BO`;
+  let hasYahoo = false;
+
+  try {
+    const chart = await fetchYahooChart(yahoo);
+    if (chart) {
+      hasYahoo = true;
+
+      const navSeries = extractNAV(chart);
+      if (navSeries.length > 0) {
+        fs.writeFileSync(
+          `${YAHOO_NAV_DIR}/${s.code}.json`,
+          JSON.stringify(navSeries, null, 2)
+        );
+      }
+    }
+  } catch {
+    hasYahoo = false;
+  }
 
   result.push({
     code: String(s.code),
     name: s.name.trim(),
     category: s.category.trim(),
-    yahoo: isValidYahoo ? yahooSymbol : null
+    yahoo: hasYahoo ? yahoo : null,
+    navFallback: hasYahoo
   });
 
-  // throttle (Yahoo-safe)
-  await new Promise(r => setTimeout(r, 200));
+  await new Promise(r => setTimeout(r, 300));
 }
 
-/* -------------------------
-   STEP 4: WRITE OUTPUT
--------------------------- */
+/* ------------------ WRITE OUTPUT ------------------ */
 
-fs.writeFileSync(
-  OUTPUT_FILE,
-  JSON.stringify(result, null, 2)
-);
+fs.writeFileSync(OUTPUT, JSON.stringify(result, null, 2));
 
-console.log(`✅ ${OUTPUT_FILE} built successfully`);
-console.log(`📊 Valid Yahoo symbols: ${result.filter(r => r.yahoo).length}`);
+console.log("✅ mf_master.json built");
+console.log(`📈 Yahoo fallback NAV available for ${result.filter(r => r.navFallback).length} schemes`);
