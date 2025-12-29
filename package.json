@@ -2,7 +2,6 @@
   "name": "mf-data-cache",
   "version": "1.0.0",
   "type": "module",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^3.3.2"
-  }
+  },
+  "description": ""
 }
