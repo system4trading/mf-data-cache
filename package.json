@@ -15,8 +15,4 @@
   },
   "description": ""
 }
-{
-  "name": "mf-data-cache",
-  "type": "module",
-  "private": true
-}
+
