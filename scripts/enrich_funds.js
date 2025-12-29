@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const master = JSON.parse(fs.readFileSync("data/mf_master.json"));
+const master = JSON.parse(fs.readFileSync("mf_master.json"));
 
 const enrichment = master.map(f => ({
   code: f.code,
@@ -14,7 +14,7 @@ const enrichment = master.map(f => ({
 }));
 
 fs.writeFileSync(
-  "data/fund_enrichment.json",
+  "fund_enrichment.json",
   JSON.stringify(enrichment, null, 2)
 );
 
