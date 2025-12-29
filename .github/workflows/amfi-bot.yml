@@ -3,5 +3,5 @@
     git config user.name "amfi-bot"
     git config user.email "bot@github.com"
     git add .
-    git commit -m "Daily AMFI NAV update" || true
+    git commit -m "Nightly AMFI & Nifty update" || true
     git push
