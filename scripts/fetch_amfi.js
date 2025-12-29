@@ -1,65 +1,57 @@
 import fs from "fs";
 import fetch from "node-fetch";
 
-const schemes = JSON.parse(
-  fs.readFileSync("mf_master.json", "utf8")
-);
+const MASTER_FILE = "mf_master.json";
+const OUT_DIR = "amfi";
 
-// Limit per run (VERY IMPORTANT)
-const BATCH_SIZE = 30;
+if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR);
 
-async function fetchSchemeHistory(code) {
-  const url = "https://www.amfiindia.com/DownloadNAVHistoryReport_Po.aspx";
+const schemes = JSON.parse(fs.readFileSync(MASTER_FILE));
 
-  const formData = new URLSearchParams({
-    mf: "",
-    sc: code,
-    fdate: "01-Apr-2010",
-    tdate: new Date().toLocaleDateString("en-GB")
-  });
-
-  const res = await fetch(url, {
-    method: "POST",
-    body: formData,
+async function fetchAMFINav(code) {
+  const url = `https://www.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=All&sc=${code}`;
+  const r = await fetch(url, {
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent": "Mozilla/5.0"
     }
   });
-
-  const text = await res.text();
-  if (!text.includes(";")) return null;
-
-  const lines = text.split("\n").slice(1);
-  return lines
-    .map(l => l.split(";"))
-    .filter(r => r.length >= 5)
-    .map(r => ({
-      date: r[0],
-      nav: parseFloat(r[4])
-    }))
-    .filter(r => !isNaN(r.nav));
+  const text = await r.text();
+  return text;
 }
 
-(async () => {
-  let count = 0;
+function parseAMFI(text) {
+  const lines = text.split("\n");
+  const data = [];
 
-  for (const s of schemes) {
-    if (count >= BATCH_SIZE) break;
+  for (const line of lines) {
+    const parts = line.split(";");
+    if (parts.length >= 3 && parts[1] && parts[2]) {
+      data.push({
+        date: parts[0],
+        nav: parseFloat(parts[1])
+      });
+    }
+  }
+  return data;
+}
 
-    const outFile = `amfi/nav_${s.code}.json`;
-    if (fs.existsSync(outFile)) continue;
+for (const s of schemes) {
+  try {
+    console.log(`📥 AMFI ${s.code} ${s.name}`);
+    const raw = await fetchAMFINav(s.code);
+    const nav = parseAMFI(raw);
 
-    console.log(`📥 Fetching AMFI NAV history: ${s.code}`);
-    const data = await fetchSchemeHistory(s.code);
-
-    if (data && data.length > 100) {
-      fs.writeFileSync(outFile, JSON.stringify(data, null, 2));
-      count++;
+    if (nav.length > 10) {
+      fs.writeFileSync(
+        `${OUT_DIR}/nav_${s.code}.json`,
+        JSON.stringify(nav, null, 2)
+      );
     }
 
-    await new Promise(r => setTimeout(r, 3000)); // throttle
+    await new Promise(r => setTimeout(r, 800)); // AMFI-safe
+  } catch (e) {
+    console.error(`❌ AMFI failed for ${s.code}`);
   }
+}
 
-  console.log(`✅ AMFI batch complete (${count} schemes)`);
-})();
+console.log("✅ AMFI historical NAV fetch complete");
