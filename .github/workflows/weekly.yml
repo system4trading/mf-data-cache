@@ -1,0 +1,43 @@
+name: Weekly Enrichment & Analytics
+
+on:
+  schedule:
+    - cron: "0 19 * * 0"   # Sunday 12:30 AM IST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  weekly-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm install node-fetch
+
+      - name: Build MF master (Yahoo validation)
+        run: node scripts/build_mf_master.js
+
+      - name: Build fund enrichment
+        run: node scripts/enrich_funds.js
+
+      - name: Build category averages
+        run: node scripts/build_category_avg.js
+
+      - name: Commit & push changes
+        run: |
+          git config user.name "amfi-bot"
+          git config user.email "amfi-bot@users.noreply.github.com"
+          git pull --rebase origin main
+          git add .
+          git commit -m "Weekly enrichment & analytics rebuild" || echo "No changes"
+          git push
