@@ -4,6 +4,9 @@ import readline from "readline";
 
 const url = "https://www.amfiindia.com/spages/NAVAll.txt";
 
+const RANGE = "5y";
+const INTERVAL = "1d";
+
 const res = await fetch(url);
 const rl = readline.createInterface({
   input: res.body,
