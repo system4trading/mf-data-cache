@@ -1,25 +1,22 @@
 [
   {
     "code": "120503",
-    "manager": "Prashant Jain",
-    "tenureYears": 7.4,
-    "aumTrendCr": [18200, 19450, 21300],
-    "expenseRatio": 1.55,
-    "avgPE": 24.6,
-    "avgDividendYield": 1.2,
-    "riskLevel": "Moderate",
-    "benchmark": "NIFTY 50"
+    "manager": "Unknown",
+    "tenure": 7,
+    "aumTrend": [
+      2463.1580248368223,
+      1170.6598568468048,
+      13725.413925375995
+    ]
   },
   {
     "code": "118989",
-    "manager": "Jinesh Gopani",
-    "tenureYears": 6.1,
-    "aumTrendCr": [9500, 10800, 12400],
-    "expenseRatio": 1.62,
-    "avgPE": 22.1,
-    "avgDividendYield": 1.0,
-    "riskLevel": "Moderate",
-    "benchmark": "NIFTY 50"
+    "manager": "Unknown",
+    "tenure": 1,
+    "aumTrend": [
+      7658.09910624216,
+      1639.140018781947,
+      7555.905101320749
+    ]
   }
 ]
-
