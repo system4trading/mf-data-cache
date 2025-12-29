@@ -1,7 +1,7 @@
 import fs from "fs";
 import fetch from "node-fetch";
 
-const raw = JSON.parse(fs.readFileSync("data/mf_db.json"));
+const raw = JSON.parse(fs.readFileSync("mf_db.json"));
 const result = [];
 
 async function validateYahoo(symbol) {
@@ -31,7 +31,7 @@ for (const s of raw) {
 }
 
 fs.writeFileSync(
-  "data/mf_master.json",
+  "mf_master.json",
   JSON.stringify(result, null, 2)
 );
 
