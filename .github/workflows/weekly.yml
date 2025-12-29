@@ -38,8 +38,19 @@ jobs:
       - name: Commit & push
         run: |
           git config user.name "amfi-bot"
-          git config user.email "bot@github.com"
+          git config user.email "amfi-bot@users.noreply.github.com"
+
+          # Stash any generated files
+          git stash push -u || echo "Nothing to stash"
+
+          # Sync with remote safely
           git pull --rebase origin main
+
+          # Restore generated files
+          git stash pop || echo "Nothing to pop"
+
+          # Commit & push
           git add .
-          git commit -m "Weekly enrichment update" || echo "No changes"
-          git push
+          git commit -m "Automated data update" || echo "No changes"
+          git push origin main
+          
