@@ -2,7 +2,7 @@ import fs from "fs";
 import fetch from "node-fetch";
 
 const schemes = JSON.parse(
-  fs.readFileSync("data/mf_master.json", "utf8")
+  fs.readFileSync("mf_master.json", "utf8")
 );
 
 // Limit per run (VERY IMPORTANT)
@@ -47,7 +47,7 @@ async function fetchSchemeHistory(code) {
   for (const s of schemes) {
     if (count >= BATCH_SIZE) break;
 
-    const outFile = `data/amfi/nav_${s.code}.json`;
+    const outFile = `amfi/nav_${s.code}.json`;
     if (fs.existsSync(outFile)) continue;
 
     console.log(`📥 Fetching AMFI NAV history: ${s.code}`);
