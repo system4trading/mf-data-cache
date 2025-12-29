@@ -1,37 +1,63 @@
 import fs from "fs";
+import path from "path";
 
-const master = JSON.parse(fs.readFileSync("mf_master.json"));
-const out = {};
+const AMFI_DIR = "amfi";
+const OUT_FILE = "category_avg.json";
 
-function CAGR(p, y) {
-  const d = y * 252;
-  if (p.length <= d) return null;
-  return Math.pow(p.at(-1) / p.at(-1 - d), 1 / y) - 1;
+console.log("📊 Building category averages...");
+
+const categoryData = {};
+
+// -------- SAFE JSON READER --------
+function safeReadJSON(filePath) {
+  try {
+    const raw = fs.readFileSync(filePath, "utf8").trim();
+
+    // If file starts with '[' or '{', try direct parse
+    if (raw.startsWith("{") || raw.startsWith("[")) {
+      return JSON.parse(raw);
+    }
+
+    // Otherwise assume line-delimited JSON
+    const lines = raw.split("\n").filter(Boolean);
+    return lines.map(line => JSON.parse(line));
+
+  } catch (err) {
+    console.warn(`⚠️ Skipping invalid JSON file: ${filePath}`);
+    return null;
+  }
 }
 
-master.forEach(mf => {
-  const f = `amfi/nav_${mf.code}.json`;
-  if (!fs.existsSync(f)) return;
+// -------- PROCESS EACH AMFI FILE --------
+const files = fs.readdirSync(AMFI_DIR).filter(f => f.endsWith(".json"));
 
-  const nav = JSON.parse(fs.readFileSync(f)).map(x => x.nav);
-  const c1 = CAGR(nav, 1);
-  const c3 = CAGR(nav, 3);
-  const c5 = CAGR(nav, 5);
+for (const file of files) {
+  const fullPath = path.join(AMFI_DIR, file);
+  const navData = safeReadJSON(fullPath);
 
-  if (!out[mf.category]) out[mf.category] = { "1": [], "3": [], "5": [] };
-  if (c1) out[mf.category]["1"].push(c1);
-  if (c3) out[mf.category]["3"].push(c3);
-  if (c5) out[mf.category]["5"].push(c5);
-});
+  if (!navData || !Array.isArray(navData)) continue;
 
-const avg = {};
-for (const c in out) {
-  avg[c] = {};
-  ["1", "3", "5"].forEach(y => {
-    const a = out[c][y];
-    avg[c][y] = a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
-  });
+  for (const row of navData) {
+    if (!row.category || !row.nav) continue;
+
+    const cat = row.category.trim();
+    categoryData[cat] ??= { sum: 0, count: 0 };
+
+    categoryData[cat].sum += Number(row.nav);
+    categoryData[cat].count++;
+  }
 }
 
-fs.writeFileSync("category_avg.json", JSON.stringify(avg, null, 2));
-console.log("Category averages built");
+// -------- COMPUTE AVERAGES --------
+const result = {};
+
+for (const cat in categoryData) {
+  const { sum, count } = categoryData[cat];
+  if (count > 0) {
+    result[cat] = Number((sum / count).toFixed(4));
+  }
+}
+
+// -------- WRITE OUTPUT --------
+fs.writeFileSync(OUT_FILE, JSON.stringify(result, null, 2));
+console.log("✅ Category averages built:", Object.keys(result).length);
