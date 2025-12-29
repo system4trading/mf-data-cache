@@ -2,7 +2,7 @@ name: Nightly AMFI & Nifty Update
 
 on:
   schedule:
-    - cron: "30 18 * * *"   # Daily 12:00 AM IST
+    - cron: "30 18 * * *"   # 12:00 AM IST
   workflow_dispatch:
 
 permissions:
@@ -13,13 +13,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  nightly-update:
+  nightly:
     runs-on: ubuntu-latest
-
     timeout-minutes: 120
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -27,22 +26,19 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install deps
-        run: npm install node-fetch
-
-      - name: Fetch AMFI historical NAV
+      - name: Fetch AMFI NAV history
         run: node scripts/fetch_amfi.js
 
-      - name: Fetch Nifty 50 historical data
+      - name: Fetch Nifty 50
         run: node scripts/fetch_nifty.js
 
-      - name: Data health checks
+      - name: Health check
         run: node scripts/health_check.js
 
-      - name: Commit & push changes
+      - name: Commit & push
         run: |
           git config user.name "amfi-bot"
-          git config user.email "bot@github.com"
+          git config user.email "amfi-bot@users.noreply.github.com"
           git pull --rebase origin main
           git add .
           git commit -m "Nightly AMFI & Nifty update" || echo "No changes"
