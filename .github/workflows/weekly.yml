@@ -13,13 +13,12 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  weekly-build:
+  weekly:
     runs-on: ubuntu-latest
-
-    timeout-minutes: 120
+    timeout-minutes: 60
 
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -27,23 +26,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install deps
-        run: npm install node-fetch
-
-      - name: Build MF master (Yahoo validation)
+      - name: Build MF master
         run: node scripts/build_mf_master.js
 
-      - name: Build fund enrichment
+      - name: Enrich funds
         run: node scripts/enrich_funds.js
 
       - name: Build category averages
         run: node scripts/build_category_avg.js
 
-      - name: Commit & push changes
+      - name: Commit & push
         run: |
           git config user.name "amfi-bot"
-          git config user.email "bot@github.com"
+          git config user.email "amfi-bot@users.noreply.github.com"
           git pull --rebase origin main
           git add .
-          git commit -m "Weekly enrichment & analytics rebuild" || echo "No changes"
+          git commit -m "Weekly enrichment update" || echo "No changes"
           git push
