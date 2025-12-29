@@ -3,5 +3,5 @@
     git config user.name "amfi-bot"
     git config user.email "bot@github.com"
     git add .
-    git commit -m "Automated data update" || true
+    git commit -m "Weekly Enrichment & Analytics" || true
     git push
