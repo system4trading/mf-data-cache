@@ -8,9 +8,15 @@ on:
   schedule:
     - cron: "0 2 * * *"
 
+concurrency:
+  group: data-pipeline
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    timeout-minutes: 120
 
     steps:
       - uses: actions/checkout@v4
