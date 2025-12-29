@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: data-pipeline
+  cancel-in-progress: false
+
 jobs:
   weekly-build:
     runs-on: ubuntu-latest
