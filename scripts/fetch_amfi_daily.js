@@ -33,41 +33,48 @@ for (const line of lines) {
   const parts = line.split(";");
   if (parts.length < 6) continue;
 
-  const [
-    schemeCode,
-    schemeName,
-    ,
-    nav,
-    ,
-    date
-  ] = parts.map(p => p.trim());
+  const schemeCode = parts[0];
+  const date = parts[parts.length - 1];
 
-  if (!/^\d+$/.test(schemeCode)) continue;
-  if (!nav || !date) continue;
-
-  const file = path.join(NAV_DIR, `nav_${schemeCode}.json`);
-
-  let history = [];
-  if (fs.existsSync(file)) {
-    try {
-      history = JSON.parse(fs.readFileSync(file, "utf8"));
-    } catch {
-      history = [];
+  // NAV is the first numeric-looking value from right
+  let nav = null;
+  for (let i = parts.length - 2; i >= 0; i--) {
+    const v = parts[i].replace(",", "");
+    if (!isNaN(v) && Number(v) > 0) {
+      nav = Number(v);
+      break;
     }
   }
 
-  // Avoid duplicate date
-  if (history.some(r => r.date === date)) continue;
+  if (!nav || !date) continue;
 
-  history.push({
-    date,
-    nav: parseFloat(nav)
-  });
 
-  history.sort((a, b) => new Date(a.date) - new Date(b.date));
+    if (!/^\d+$/.test(schemeCode)) continue;
+    if (!nav || !date) continue;
 
-  fs.writeFileSync(file, JSON.stringify(history, null, 2));
-  updates++;
-}
+    const file = path.join(NAV_DIR, `nav_${schemeCode}.json`);
 
-console.log(`✅ Daily NAV update complete (${updates} updates)`);
+    let history = [];
+    if (fs.existsSync(file)) {
+      try {
+        history = JSON.parse(fs.readFileSync(file, "utf8"));
+      } catch {
+        history = [];
+      }
+    }
+
+    // Avoid duplicate date
+    if (history.some(r => r.date === date)) continue;
+
+    history.push({
+      date,
+      nav: parseFloat(nav)
+    });
+
+    history.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    fs.writeFileSync(file, JSON.stringify(history, null, 2));
+    updates++;
+  }
+
+  console.log(`✅ Daily NAV update complete (${updates} updates)`);
