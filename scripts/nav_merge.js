@@ -1,44 +1,64 @@
 import fs from "fs";
+import path from "path";
 
-const amfiDaily = fs.readFileSync("amfi/nav_daily.txt", "utf8");
-const lines = amfiDaily.split("\n");
+const AMFI_DIR = "amfi";
+const YAHOO_DIR = "yahoo";
+const OUT_DIR = "nav_merged";
 
-const latest = {};
-for (const l of lines) {
-  const p = l.split(";");
-  if (p.length < 6) continue;
-
-  const code = p[0];
-  const nav = parseFloat(p[4]);
-  const date = p[5];
-
-  if (!isNaN(nav)) {
-    latest[code] = { date, nav };
-  }
+if (!fs.existsSync(OUT_DIR)) {
+  fs.mkdirSync(OUT_DIR, { recursive: true });
 }
 
-fs.mkdirSync("amfi", { recursive: true });
+const amfiFiles = fs
+  .readdirSync(AMFI_DIR)
+  .filter(f => f.startsWith("nav_") && f.endsWith(".json"));
 
-for (const file of fs.readdirSync("yahoo")) {
-  const code = file.match(/\d+/)[0];
-  const yahoo = JSON.parse(fs.readFileSync(`yahoo/${file}`, "utf8"));
+for (const file of amfiFiles) {
+  const code = file.replace("nav_", "").replace(".json", "");
 
-  const amfi = latest[code];
-  if (amfi) {
-    const last = yahoo[yahoo.length - 1];
-    if (!last || last.date !== amfi.date) {
-      yahoo.push(amfi);
-    } else {
-      last.nav = amfi.nav; // AMFI wins
+  const amfiPath = path.join(AMFI_DIR, file);
+  const yahooPath = path.join(YAHOO_DIR, `nav_${code}.json`);
+  const outPath = path.join(OUT_DIR, `nav_${code}.json`);
+
+  let amfi = [];
+  let yahoo = [];
+
+  try {
+    amfi = JSON.parse(fs.readFileSync(amfiPath, "utf8"));
+  } catch {
+    console.warn(`⚠️ Invalid AMFI JSON for ${code}`);
+  }
+
+  if (fs.existsSync(yahooPath)) {
+    try {
+      yahoo = JSON.parse(fs.readFileSync(yahooPath, "utf8"));
+    } catch {
+      console.warn(`⚠️ Invalid Yahoo JSON for ${code}`);
     }
   }
 
-  fs.writeFileSync(
-    `amfi/nav_${code}.json`,
-    JSON.stringify(yahoo, null, 2)
-  );
+  // Merge by date (AMFI wins)
+  const map = new Map();
 
-  console.log(`🔗 NAV merged: ${code}`);
+  for (const r of yahoo) {
+    map.set(r.date, r.nav);
+  }
+
+  for (const r of amfi) {
+    map.set(r.date, r.nav);
+  }
+
+  const merged = [...map.entries()]
+    .map(([date, nav]) => ({ date, nav }))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (!merged.length) {
+    console.warn(`⚠️ No merged data for ${code}`);
+    continue;
+  }
+
+  fs.writeFileSync(outPath, JSON.stringify(merged, null, 2));
+  console.log(`✅ Merged NAV: ${code} (${merged.length} records)`);
 }
 
-console.log("✅ AMFI + Yahoo NAV reconciliation complete");
+console.log("🏁 NAV merge complete");
