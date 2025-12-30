@@ -1,48 +1,44 @@
 import fs from "fs";
 
-const AMFI_DIR = "amfi";
-const YAHOO_DIR = "yahoo_nav";
-const OUT_DIR = "nav_merged";
+const amfiDaily = fs.readFileSync("amfi/nav_daily.txt", "utf8");
+const lines = amfiDaily.split("\n");
 
-if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR);
+const latest = {};
+for (const l of lines) {
+  const p = l.split(";");
+  if (p.length < 6) continue;
 
-const files = fs.readdirSync(AMFI_DIR).filter(f => f.endsWith(".json"));
+  const code = p[0];
+  const nav = parseFloat(p[4]);
+  const date = p[5];
 
-for (const file of files) {
-  const code = file.replace("nav_", "").replace(".json", "");
-
-  const amfiFile = `${AMFI_DIR}/${file}`;
-  const yahooFile = `${YAHOO_DIR}/${code}.json`;
-
-  if (!fs.existsSync(amfiFile)) continue;
-
-  const amfi = JSON.parse(fs.readFileSync(amfiFile));
-  const yahoo = fs.existsSync(yahooFile)
-    ? JSON.parse(fs.readFileSync(yahooFile))
-    : [];
-
-  const map = new Map();
-
-  // AMFI has priority
-  for (const d of amfi) {
-    map.set(d.date, { ...d, source: "AMFI" });
+  if (!isNaN(nav)) {
+    latest[code] = { date, nav };
   }
+}
 
-  // Yahoo fills gaps
-  for (const d of yahoo) {
-    if (!map.has(d.date)) {
-      map.set(d.date, { ...d, source: "YAHOO" });
+fs.mkdirSync("amfi", { recursive: true });
+
+for (const file of fs.readdirSync("yahoo")) {
+  const code = file.match(/\d+/)[0];
+  const yahoo = JSON.parse(fs.readFileSync(`yahoo/${file}`, "utf8"));
+
+  const amfi = latest[code];
+  if (amfi) {
+    const last = yahoo[yahoo.length - 1];
+    if (!last || last.date !== amfi.date) {
+      yahoo.push(amfi);
+    } else {
+      last.nav = amfi.nav; // AMFI wins
     }
   }
 
-  const merged = [...map.values()].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
+  fs.writeFileSync(
+    `amfi/nav_${code}.json`,
+    JSON.stringify(yahoo, null, 2)
   );
 
-  fs.writeFileSync(
-    `${OUT_DIR}/nav_${code}.json`,
-    JSON.stringify(merged, null, 2)
-  );
+  console.log(`🔗 NAV merged: ${code}`);
 }
 
-console.log("✅ NAV reconciliation complete");
+console.log("✅ AMFI + Yahoo NAV reconciliation complete");
