@@ -1,5 +1,4 @@
 import fs from "fs";
-import fetch from "node-fetch";
 
 const MASTER_FILE = "./mf_master.json";
 const OUT_DIR = "./amfi";
