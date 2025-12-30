@@ -91,6 +91,11 @@ for (const s of schemes) {
   await new Promise(r => setTimeout(r, 300));
 }
 
+if (result.length === 0) {
+  console.error("❌ mf_master.json is empty — aborting");
+  process.exit(1);
+}
+
 /* ------------------ WRITE OUTPUT ------------------ */
 
 fs.writeFileSync(OUTPUT, JSON.stringify(result, null, 2));
