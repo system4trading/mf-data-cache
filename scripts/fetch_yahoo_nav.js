@@ -1,5 +1,4 @@
 import fs from "fs";
-import fetch from "node-fetch";
 
 const schemes = JSON.parse(fs.readFileSync("mf_master.json", "utf8"));
 fs.mkdirSync("yahoo", { recursive: true });
