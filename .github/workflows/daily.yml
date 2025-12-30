@@ -25,7 +25,7 @@ jobs:
       - name: Commit
         run: |
           git config user.name "amfi-bot"
-          git config user.email "bot@mf-analytics.local"
+          git config user.email "bot@github.com"
           git add amfi/
           git commit -m "Daily AMFI NAV update" || echo "No changes"
           git push
