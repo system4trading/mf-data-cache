@@ -9,7 +9,7 @@ if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR);
 const schemes = JSON.parse(fs.readFileSync(MASTER_FILE));
 
 async function fetchAMFINav(code) {
-  const url = `https://www.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?mf=All&sc=${code}`;
+  const url = `const url = `https://www.amfiindia.com/DownloadNAVHistoryReport_Po.aspx?sc=${code}`;
   const r = await fetch(url, {
     headers: {
       "User-Agent": "Mozilla/5.0"
