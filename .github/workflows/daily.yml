@@ -1,0 +1,31 @@
+name: Daily NAV Update
+
+on:
+  schedule:
+    - cron: "30 10 * * 1-5"   # 4:00 PM IST (market days)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install
+
+      - name: Fetch AMFI daily NAV
+        run: node scripts/fetch_amfi_daily.js
+
+      - name: Commit
+        run: |
+          git config user.name "amfi-bot"
+          git config user.email "bot@mf-analytics.local"
+          git add amfi/
+          git commit -m "Daily AMFI NAV update" || echo "No changes"
+          git push
