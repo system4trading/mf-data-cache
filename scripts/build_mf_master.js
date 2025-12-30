@@ -1,5 +1,4 @@
 import fs from "fs";
-import fetch from "node-fetch";
 
 const INPUT = "mf_db.json";
 const OUTPUT = "mf_master.json";
