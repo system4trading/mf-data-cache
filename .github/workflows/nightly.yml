@@ -37,12 +37,6 @@ jobs:
         run: node scripts/fetch_yahoo_nav.js
 
       # -------------------------------
-      # NAV RECONCILIATION
-      # -------------------------------
-      - name: Merge AMFI + Yahoo NAV
-        run: node scripts/nav_merge.js
-
-      # -------------------------------
       # NIFTY 50 DATA
       # -------------------------------
       - name: Fetch Nifty 50
