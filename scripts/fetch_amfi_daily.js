@@ -3,6 +3,26 @@ import path from "path";
 
 const AMFI_DAILY_URL = "https://www.amfiindia.com/spages/NAVAll.txt";
 const NAV_DIR = "amfi";
+const FILE = `${DIR}/NAVAll.txt`;
+
+if (!fs.existsSync(DIR)) fs.mkdirSync(DIR, { recursive: true });
+
+console.log("📥 Fetching AMFI NAVAll.txt");
+
+const res = await fetch(URL);
+if (!res.ok) {
+  throw new Error(`AMFI fetch failed: ${res.status}`);
+}
+
+const text = await res.text();
+
+if (!text.includes("Scheme Code")) {
+  throw new Error("Invalid AMFI NAV file (unexpected format)");
+}
+
+fs.writeFileSync(FILE, text, "utf8");
+
+console.log(`✅ AMFI NAV saved → ${FILE}`);
 
 if (!fs.existsSync(NAV_DIR)) {
   fs.mkdirSync(NAV_DIR, { recursive: true });
