@@ -96,3 +96,5 @@ fs.writeFileSync(OUTPUT, JSON.stringify(result, null, 2));
 
 console.log("✅ mf_master.json built");
 console.log(`📈 Yahoo fallback NAV available for ${result.filter(r => r.navFallback).length} schemes`);
+console.log("🏁 Script completed");
+process.exit(0);
