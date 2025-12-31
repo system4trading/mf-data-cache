@@ -33,7 +33,7 @@ jobs:
       # -------------------------------
       # YAHOO BACKFILL (HISTORICAL)
       # -------------------------------
-      - name: Fetch Yahoo historical NAV
+      - name: Validate Yahoo symbols
         run: node scripts/fetch_yahoo_nav.js
 
       # -------------------------------
