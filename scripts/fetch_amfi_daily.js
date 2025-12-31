@@ -12,7 +12,7 @@ console.log("📥 Fetching AMFI daily NAV…");
 
 const res = await fetch(AMFI_DAILY_URL, {
   headers: {
-    "User-Agent": "mf-analytics-bot"
+    "User-Agent": "amfi-bot"
   }
 });
 
