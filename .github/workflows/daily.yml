@@ -22,6 +22,8 @@ jobs:
       - name: Fetch AMFI daily NAV
         run: node scripts/fetch_amfi_daily.js
 
+      - run: node scripts/build_nav_history.js
+
       - name: Commit
         run: |
           git config user.name "amfi-bot"
