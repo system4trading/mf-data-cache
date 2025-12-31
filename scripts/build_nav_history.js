@@ -1,6 +1,13 @@
 import fs from "fs";
 
-const raw = fs.readFileSync("amfi/NAVAll.txt", "utf8");
+const FILE = "amfi/NAVAll.txt";
+
+if (!fs.existsSync(FILE)) {
+  console.error("❌ NAVAll.txt missing. Did fetch_amfi_daily.js run?");
+  process.exit(1);
+}
+
+const raw = fs.readFileSync(FILE, "utf8");
 const lines = raw.split("\n");
 
 const navMap = {};
