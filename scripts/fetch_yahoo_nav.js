@@ -48,7 +48,7 @@ for (const s of MASTER) {
   const data = await fetchYahoo(s.yahoo);
 
   if (!data.length) {
-    console.warn(`⚠️ No Yahoo data for ${s.code}`);
+    console.warn(`⚠️ Yahoo has no NAV history for ${s.code} (${s.yahoo})`);
     continue;
   }
 
