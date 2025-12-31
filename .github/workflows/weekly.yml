@@ -30,7 +30,7 @@ jobs:
         run: node scripts/build_mf_db_from_amfi.js
       
       - name: Build MF master
-        run: timeout 5m node scripts/build_mf_master.js
+        run: timeout 15m node scripts/build_mf_master.js
 
       - name: Enrich funds
         run: node scripts/enrich_funds.js
