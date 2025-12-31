@@ -61,3 +61,5 @@ for (const cat in categoryData) {
 // -------- WRITE OUTPUT --------
 fs.writeFileSync(OUT_FILE, JSON.stringify(result, null, 2));
 console.log("✅ Category averages built:", Object.keys(result).length);
+console.log("🏁 Script completed");
+process.exit(0);
