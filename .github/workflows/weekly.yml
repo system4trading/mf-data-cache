@@ -26,6 +26,8 @@ jobs:
         with:
           node-version: 20
 
+      - run: node scripts/build_mf_db_from_amfi.js
+      
       - name: Build MF master
         run: node scripts/build_mf_master.js
 
