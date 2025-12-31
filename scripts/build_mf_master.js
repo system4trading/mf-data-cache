@@ -1,5 +1,4 @@
 import fs from "fs";
-import fetch from "node-fetch";
 
 /* ---------------- CONFIG ---------------- */
 
@@ -79,7 +78,6 @@ for (const s of schemes) {
     yahoo: isValid ? yahoo : null
   });
 
-  // Throttle to avoid Yahoo rate limits
   await new Promise(r => setTimeout(r, THROTTLE_MS));
 }
 
@@ -88,7 +86,5 @@ for (const s of schemes) {
 fs.writeFileSync(OUT_FILE, JSON.stringify(output, null, 2), "utf8");
 
 console.log(`✅ mf_master.json built (${output.length} schemes)`);
-
-/* ---------------- EXIT CLEANLY ---------------- */
 
 process.exit(0);
