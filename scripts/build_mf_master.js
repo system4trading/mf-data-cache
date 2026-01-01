@@ -76,7 +76,14 @@ async function validateYahoo(symbol) {
 const output = [];
 
 for (const s of schemes) {
-  if (!s.code || !s.name) continue;
+  if (
+    !s.code ||
+    !s.name ||
+    isNaN(Number(s.code)) ||        // 🔥 filters "Scheme Code"
+    String(s.code).length < 4
+  ) {
+    continue;
+  }
 
   const yahoo = `${s.code}.BO`;
 
