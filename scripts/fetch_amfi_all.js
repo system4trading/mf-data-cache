@@ -3,7 +3,7 @@ import fs from "fs";
 import https from "https";
 
 const URL = "https://www.amfiindia.com/spages/NAVAll.txt";
-const OUT_DIR = "data/amfi";
+const OUT_DIR = "amfi";
 const OUT_FILE = `${OUT_DIR}/NAVAll.txt`;
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
