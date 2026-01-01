@@ -67,6 +67,15 @@ for (const s of schemes) {
 
   const yahoo = `${s.code}.BO`;
 
+      // ✅ UPDATE
+  const existing = new Set(existingMaster.map(s => s.code));
+
+  for (const scheme of allSchemes) {
+    if (!existing.has(scheme.code)) {
+      validateYahoo(...)
+    }
+  }
+
   console.log(`🔎 Validating Yahoo symbol: ${yahoo}`);
 
   const isValid = await validateYahoo(yahoo);
@@ -88,13 +97,4 @@ fs.writeFileSync(OUT_FILE, JSON.stringify(output, null, 2), "utf8");
 console.log(`✅ mf_master.json built (${output.length} schemes)`);
 
 process.exit(0);
-
-  // ✅ UPDATE
-const existing = new Set(existingMaster.map(s => s.code));
-
-for (const scheme of allSchemes) {
-  if (!existing.has(scheme.code)) {
-    validateYahoo(...)
-  }
-}
 
