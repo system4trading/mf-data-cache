@@ -6853,10 +6853,10 @@ Kotak Mahindra Mutual Fund
 152911;INF174KA1TH7;INF174KA1TI5;Kotak MNC Fund-Direct Plan-IDCW Option;10.94;31-Dec-2025
 152913;INF174KA1TJ3;-;Kotak MNC Fund-Regular Plan- Growth;10.754;31-Dec-2025
 152912;INF174KA1TK1;INF174KA1TL9;KotaK MNC Fund-Regular Plan-IDCW OPTION;10.754;31-Dec-2025
-147727;INF174KA1EZ1;-;Kotak Pioneer Fund- Direct Plan- Growth Option;35.078;30-Dec-2025
-147724;INF174KA1EW8;-;Kotak Pioneer Fund- Regular Plan- Growth Option;31.847;30-Dec-2025
-147728;INF174KA1EU2;INF174KA1EV0;Kotak Pioneer Fund- Regular Plan- Reinvestment of Income Distribution cum capital withdrawal option;31.862;30-Dec-2025
-147725;INF174KA1EX6;INF174KA1EY4;Kotak Pioneer Fund-Direct Plan-Reinvestment of Income Distribution cum capital withdrawal option;35.073;30-Dec-2025
+147727;INF174KA1EZ1;-;Kotak Pioneer Fund- Direct Plan- Growth Option;35.294;31-Dec-2025
+147724;INF174KA1EW8;-;Kotak Pioneer Fund- Regular Plan- Growth Option;32.042;31-Dec-2025
+147728;INF174KA1EU2;INF174KA1EV0;Kotak Pioneer Fund- Regular Plan- Reinvestment of Income Distribution cum capital withdrawal option;32.057;31-Dec-2025
+147725;INF174KA1EX6;INF174KA1EY4;Kotak Pioneer Fund-Direct Plan-Reinvestment of Income Distribution cum capital withdrawal option;35.289;31-Dec-2025
 151881;INF174KA1OL0;-;Kotak Quant Fund - Direct Plan - Growth Option;15.447;31-Dec-2025
 151880;INF174KA1OM8;INF174KA1ON6;Kotak Quant Fund - Direct plan - IDCW Payout;15.448;31-Dec-2025
 151878;INF174KA1OI6;-;Kotak Quant Fund - Regular Plan - Growth Option;15.323;31-Dec-2025
@@ -9803,14 +9803,14 @@ ICICI Prudential Mutual Fund
 120703;INF109K01X57;INF109K01X65;ICICI Prudential Diversified Debt Strategy Active FOF - Direct Plan -  IDCW;42.3853;31-Dec-2025
 102141;INF109K01878;-;ICICI Prudential Diversified Debt Strategy Active FOF - Growth;46.2179;31-Dec-2025
 102143;INF109K01FS0;INF109K01886;ICICI Prudential Diversified Debt Strategy Active FOF - IDCW;40.3138;31-Dec-2025
-148035;INF109KC1I49;-;ICICI Prudential Diversified Equity All Cap Omni FOF - Direct Plan - Growth;33.1058;30-Dec-2025
-148036;INF109KC1I64;INF109KC1I56;ICICI Prudential Diversified Equity All Cap Omni FOF - Direct Plan - IDCW;25.7827;30-Dec-2025
-148033;INF109KC1I15;-;ICICI Prudential Diversified Equity All Cap Omni FOF - Growth;31.7373;30-Dec-2025
-148034;INF109KC1I31;INF109KC1I23;ICICI Prudential Diversified Equity All Cap Omni FOF - IDCW;24.5385;30-Dec-2025
-120679;INF109K01X16;-;ICICI Prudential Dynamic Asset Allocation Active FOF - Direct Plan - Growth;137.8052;30-Dec-2025
-120680;INF109K01W90;INF109K01X08;ICICI Prudential Dynamic Asset Allocation Active FOF - Direct Plan - IDCW;108.0664;30-Dec-2025
-102137;INF109K01837;-;ICICI Prudential Dynamic Asset Allocation Active FOF - Growth;124.1446;30-Dec-2025
-102138;INF109K01FJ9;INF109K01845;ICICI Prudential Dynamic Asset Allocation Active FOF - IDCW;95.4042;30-Dec-2025
+148035;INF109KC1I49;-;ICICI Prudential Diversified Equity All Cap Omni FOF - Direct Plan - Growth;33.3387;31-Dec-2025
+148036;INF109KC1I64;INF109KC1I56;ICICI Prudential Diversified Equity All Cap Omni FOF - Direct Plan - IDCW;25.9641;31-Dec-2025
+148033;INF109KC1I15;-;ICICI Prudential Diversified Equity All Cap Omni FOF - Growth;31.9602;31-Dec-2025
+148034;INF109KC1I31;INF109KC1I23;ICICI Prudential Diversified Equity All Cap Omni FOF - IDCW;24.7108;31-Dec-2025
+120679;INF109K01X16;-;ICICI Prudential Dynamic Asset Allocation Active FOF - Direct Plan - Growth;138.3975;31-Dec-2025
+120680;INF109K01W90;INF109K01X08;ICICI Prudential Dynamic Asset Allocation Active FOF - Direct Plan - IDCW;108.5309;31-Dec-2025
+102137;INF109K01837;-;ICICI Prudential Dynamic Asset Allocation Active FOF - Growth;124.6746;31-Dec-2025
+102138;INF109K01FJ9;INF109K01845;ICICI Prudential Dynamic Asset Allocation Active FOF - IDCW;95.8115;31-Dec-2025
 147648;INF109KC1F34;-;ICICI Prudential Global Advantage Fund (FOF) - Direct Plan - Growth Option;20.6679;30-Dec-2025
 147645;INF109KC1F42;-;ICICI Prudential Global Advantage Fund (FOF) - Direct Plan - IDCW;20.6678;30-Dec-2025
 147647;INF109KC1F00;-;ICICI Prudential Global Advantage Fund (FOF) - Growth Option;19.8097;30-Dec-2025
@@ -9847,9 +9847,9 @@ ICICI Prudential Mutual Fund
 149776;INF109KC1Z06;INF109KC1Z14;ICICI PRUDENTIAL SILVER ETF FUND OF FUND - Direct Plan - IDCW;34.6431;31-Dec-2025
 149777;INF109KC1Y64;-;ICICI PRUDENTIAL SILVER ETF FUND OF FUND - Growth;33.9774;31-Dec-2025
 149778;INF109KC1Y72;INF109KC1Y80;ICICI PRUDENTIAL SILVER ETF FUND OF FUND - IDCW;33.9769;31-Dec-2025
-120700;INF109K01X40;-;ICICI Prudential Thematic Advantage Fund (FOF) - Direct Plan - Growth;247.2212;30-Dec-2025
-102135;INF109K01852;-;ICICI Prudential Thematic Advantage Fund (FOF) - Growth;230.3704;30-Dec-2025
-102136;INF109K01FR2;INF109K01860;ICICI Prudential Thematic Advantage Fund (FOF) - IDCW;178.5803;30-Dec-2025
+120700;INF109K01X40;-;ICICI Prudential Thematic Advantage Fund (FOF) - Direct Plan - Growth;249.3861;31-Dec-2025
+102135;INF109K01852;-;ICICI Prudential Thematic Advantage Fund (FOF) - Growth;232.3798;31-Dec-2025
+102136;INF109K01FR2;INF109K01860;ICICI Prudential Thematic Advantage Fund (FOF) - IDCW;180.1380;31-Dec-2025
  
 Invesco Mutual Fund
  
@@ -10200,8 +10200,8 @@ Franklin Templeton Mutual Fund
  
 HDFC Mutual Fund
  
-149180;INF179KC1BO4;-;HDFC Developed World Overseas Equity Passive FOF - Direct Plan - Growth Option;18.588;30-Dec-2025
-149181;INF179KC1BP1;-;HDFC Developed World Overseas Equity Passive FOF - Growth Option;18.217;30-Dec-2025
+149180;INF179KC1BO4;-;HDFC Developed World Overseas Equity Passive FOF - Direct Plan - Growth Option;18.583;31-Dec-2025
+149181;INF179KC1BP1;-;HDFC Developed World Overseas Equity Passive FOF - Growth Option;18.212;31-Dec-2025
  
 HSBC Mutual Fund
  
@@ -10256,10 +10256,10 @@ Kotak Mahindra Mutual Fund
 106442;INF174K01DX9;INF174K01DW1;Kotak Global Emerging Market Overseas Equity Omni FOF - Payout of Income Distribution cum capital withdrawal option;30.785;31-Dec-2025
 119778;INF174K01LX2;INF174K01LY0;Kotak Global Emerging Market Overseas Equity Omni FOF - Payout of Income Distribution cum capital withdrawal option - Direct;33.593;31-Dec-2025
 106441;INF174K01DV3;-;Kotak Global Emerging Market Overseas Equity Omni FOF- Growth;30.783;31-Dec-2025
-149058;INF174KA1HE9;INF174KA1HF6;Kotak Global Innovation Overseas Equity Omni FOF - Regular Plan -IDCW Option;12.5909;30-Dec-2025
-149056;INF174KA1HD1;-;Kotak Global Innovation Overseas Equity Omni FOF - Regular Plan-Growth;12.5905;30-Dec-2025
-149060;INF174KA1HH2;INF174KA1HI0;Kotak Global Innovation Overseas Equity Omni FOF- Direct Plan - IDCW Option;13.2724;30-Dec-2025
-149059;INF174KA1HG4;-;Kotak Global Innovation Overseas Equity Omni FOF- Direct Plan -Growth;13.2743;30-Dec-2025
+149058;INF174KA1HE9;INF174KA1HF6;Kotak Global Innovation Overseas Equity Omni FOF - Regular Plan -IDCW Option;12.5191;31-Dec-2025
+149056;INF174KA1HD1;-;Kotak Global Innovation Overseas Equity Omni FOF - Regular Plan-Growth;12.5187;31-Dec-2025
+149060;INF174KA1HH2;INF174KA1HI0;Kotak Global Innovation Overseas Equity Omni FOF- Direct Plan - IDCW Option;13.1971;31-Dec-2025
+149059;INF174KA1HG4;-;Kotak Global Innovation Overseas Equity Omni FOF- Direct Plan -Growth;13.199;31-Dec-2025
 148646;INF174KA1FO2;-;Kotak International REIT Overseas Equity Omni FOF - Direct Plan - Growth;11.9699;31-Dec-2025
 148649;INF174KA1FN4;INF174KA1FP9;Kotak International REIT Overseas Equity Omni FOF - Direct Plan - Payout of Income Distribution cum capital withdrawal option;11.9698;31-Dec-2025
 148645;INF174KA1FL8;-;Kotak International REIT Overseas Equity Omni FOF - Regular Plan - Growth;11.4439;31-Dec-2025
