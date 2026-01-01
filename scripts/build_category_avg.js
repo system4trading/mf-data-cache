@@ -1,65 +1,27 @@
 import fs from "fs";
-import path from "path";
 
-const AMFI_DIR = "amfi";
-const OUT_FILE = "category_avg.json";
+const MASTER = JSON.parse(fs.readFileSync("mf_master.json"));
+const DIR = "amfi";
+const out = {};
 
-console.log("📊 Building category averages...");
+for (const s of MASTER) {
+  const file = `${DIR}/nav_${s.code}.json`;
+  if (!fs.existsSync(file)) continue;
 
-const categoryData = {};
+  const nav = JSON.parse(fs.readFileSync(file));
+  if (nav.length < 200) continue;
 
-// -------- SAFE JSON READER --------
-function safeReadJSON(filePath) {
-  try {
-    const raw = fs.readFileSync(filePath, "utf8").trim();
+  const ret =
+    nav[nav.length - 1].nav / nav[0].nav - 1;
 
-    // If file starts with '[' or '{', try direct parse
-    if (raw.startsWith("{") || raw.startsWith("[")) {
-      return JSON.parse(raw);
-    }
-
-    // Otherwise assume line-delimited JSON
-    const lines = raw.split("\n").filter(Boolean);
-    return lines.map(line => JSON.parse(line));
-
-  } catch (err) {
-    console.warn(`⚠️ Skipping invalid JSON file: ${filePath}`);
-    return null;
-  }
+  if (!out[s.category]) out[s.category] = [];
+  out[s.category].push(ret);
 }
 
-// -------- PROCESS EACH AMFI FILE --------
-const files = fs.readdirSync(AMFI_DIR).filter(f => f.endsWith(".json"));
-
-for (const file of files) {
-  const fullPath = path.join(AMFI_DIR, file);
-  const navData = safeReadJSON(fullPath);
-
-  if (!navData || !Array.isArray(navData)) continue;
-
-  for (const row of navData) {
-    if (!row.category || !row.nav) continue;
-
-    const cat = row.category.trim();
-    categoryData[cat] ??= { sum: 0, count: 0 };
-
-    categoryData[cat].sum += Number(row.nav);
-    categoryData[cat].count++;
-  }
+const avg = {};
+for (const k in out) {
+  avg[k] = out[k].reduce((a, b) => a + b, 0) / out[k].length;
 }
 
-// -------- COMPUTE AVERAGES --------
-const result = {};
-
-for (const cat in categoryData) {
-  const { sum, count } = categoryData[cat];
-  if (count > 0) {
-    result[cat] = Number((sum / count).toFixed(4));
-  }
-}
-
-// -------- WRITE OUTPUT --------
-fs.writeFileSync(OUT_FILE, JSON.stringify(result, null, 2));
-console.log("✅ Category averages built:", Object.keys(result).length);
-console.log("🏁 Script completed");
-process.exit(0);
+fs.writeFileSync("category_avg.json", JSON.stringify(avg, null, 2));
+console.log(`✅ Category averages built: ${Object.keys(avg).length}`);
