@@ -1,33 +1,48 @@
+// scripts/build_nav_history.js
 import fs from "fs";
 
-const DIR = "amfi";
+const NAVALL = "data/amfi/NAVAll.txt";
+const OUT_DIR = "data/nav";
+
+if (!fs.existsSync(NAVALL)) {
+  console.error("❌ NAVAll.txt missing");
+  process.exit(1);
+}
+
+fs.mkdirSync(OUT_DIR, { recursive: true });
+
+console.log("📥 Processing NAVAll.txt (delta-only)");
+
+const lines = fs.readFileSync(NAVALL, "utf8")
+  .split("\n")
+  .filter(l => l.includes(";"));
+
 let updated = 0;
 
-for (const file of fs.readdirSync(DIR)) {
-  if (!file.startsWith("nav_") || !file.endsWith(".json")) continue;
+for (const line of lines) {
+  const [code, , , nav, date] = line.split(";").map(s => s.trim());
 
-  const path = `${DIR}/${file}`;
-  const nav = JSON.parse(fs.readFileSync(path));
+  if (!code || isNaN(nav)) continue;
 
-  if (!Array.isArray(nav) || nav.length === 0) continue;
+  const file = `${OUT_DIR}/nav_${code}.json`;
 
-  nav.sort((a, b) => new Date(a.date) - new Date(b.date));
+  let history = [];
+  let lastDate = null;
 
-  // Remove duplicates
-  const deduped = [];
-  const seen = new Set();
-
-  for (const r of nav) {
-    if (!seen.has(r.date)) {
-      seen.add(r.date);
-      deduped.push(r);
-    }
+  if (fs.existsSync(file)) {
+    history = JSON.parse(fs.readFileSync(file, "utf8"));
+    lastDate = history.at(-1)?.date;
   }
 
-  if (deduped.length !== nav.length) {
-    fs.writeFileSync(path, JSON.stringify(deduped, null, 2));
-    updated++;
-  }
+  if (lastDate === date) continue;
+
+  history.push({
+    date,
+    nav: Number(nav)
+  });
+
+  fs.writeFileSync(file, JSON.stringify(history, null, 2));
+  updated++;
 }
 
 console.log(`✅ NAV updated for ${updated} schemes`);
