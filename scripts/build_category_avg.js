@@ -1,27 +1,45 @@
 import fs from "fs";
 
+/* ---------------- CONFIG ---------------- */
+
 const MASTER = JSON.parse(fs.readFileSync("mf_master.json"));
-const DIR = "amfi";
-const out = {};
+const NAV_DIR = "amfi";
+const OUT = "category_avg.json";
+
+/* ---------------- BUILD ---------------- */
+
+const categories = {};
 
 for (const s of MASTER) {
-  const file = `${DIR}/nav_${s.code}.json`;
+  const file = `${NAV_DIR}/nav_${s.code}.json`;
   if (!fs.existsSync(file)) continue;
 
-  const nav = JSON.parse(fs.readFileSync(file));
-  if (nav.length < 200) continue;
+  const navs = JSON.parse(fs.readFileSync(file));
 
-  const ret =
-    nav[nav.length - 1].nav / nav[0].nav - 1;
+  if (navs.length < 2) continue;
 
-  if (!out[s.category]) out[s.category] = [];
-  out[s.category].push(ret);
+  for (let i = 1; i < navs.length; i++) {
+    const date = navs[i].date;
+    const ret = (navs[i].nav - navs[i - 1].nav) / navs[i - 1].nav;
+
+    categories[s.category] ??= {};
+    categories[s.category][date] ??= [];
+
+    categories[s.category][date].push(ret);
+  }
 }
 
-const avg = {};
-for (const k in out) {
-  avg[k] = out[k].reduce((a, b) => a + b, 0) / out[k].length;
+/* ---------------- AVERAGE ---------------- */
+
+const output = {};
+
+for (const [cat, dates] of Object.entries(categories)) {
+  output[cat] = Object.entries(dates).map(([date, vals]) => ({
+    date,
+    avgReturn: vals.reduce((a, b) => a + b, 0) / vals.length
+  }));
 }
 
-fs.writeFileSync("category_avg.json", JSON.stringify(avg, null, 2));
-console.log(`✅ Category averages built: ${Object.keys(avg).length}`);
+fs.writeFileSync(OUT, JSON.stringify(output, null, 2));
+
+console.log(`✅ Category averages built: ${Object.keys(output).length}`);
