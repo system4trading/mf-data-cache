@@ -1,4 +1,5 @@
 import fs from "fs";
+import fetch from "node-fetch";
 import { setTimeout as sleep } from "timers/promises";
 
 /* ---------------- CONFIG ---------------- */
