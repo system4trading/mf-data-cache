@@ -81,7 +81,15 @@ for (const s of schemes) {
   await new Promise(r => setTimeout(r, THROTTLE_MS));
 }
 
-  // ✅ GOOD
+/* ---------------- SAVE ---------------- */
+
+fs.writeFileSync(OUT_FILE, JSON.stringify(output, null, 2), "utf8");
+
+console.log(`✅ mf_master.json built (${output.length} schemes)`);
+
+process.exit(0);
+
+  // ✅ UPDATE
 const existing = new Set(existingMaster.map(s => s.code));
 
 for (const scheme of allSchemes) {
@@ -90,11 +98,3 @@ for (const scheme of allSchemes) {
   }
 }
 
-
-/* ---------------- SAVE ---------------- */
-
-fs.writeFileSync(OUT_FILE, JSON.stringify(output, null, 2), "utf8");
-
-console.log(`✅ mf_master.json built (${output.length} schemes)`);
-
-process.exit(0);
