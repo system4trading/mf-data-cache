@@ -35,6 +35,19 @@ if (!Array.isArray(schemes)) {
 
 console.log(`📦 Loaded ${schemes.length} schemes`);
 
+let existingMaster = [];
+
+if (fs.existsSync("mf_master.json")) {
+  try {
+    existingMaster = JSON.parse(fs.readFileSync("mf_master.json", "utf8"));
+  } catch {
+    console.warn("⚠️ Existing mf_master.json invalid, rebuilding fully");
+  }
+}
+
+const existingCodes = new Set(existingMaster.map(s => s.code));
+
+
 /* ---------------- HARDENED YAHOO VALIDATION ---------------- */
 
 async function validateYahoo(symbol) {
@@ -69,7 +82,16 @@ for (const s of schemes) {
 
   console.log(`🔎 Validating Yahoo symbol: ${yahoo}`);
 
-  const isValid = await validateYahoo(yahoo);
+  let isValid = null;
+
+  if (!existingCodes.has(s.code)) {
+    console.log(`🆕 New scheme detected → validating ${yahoo}`);
+    isValid = await validateYahoo(yahoo);
+  } else {
+    // reuse previous validation result
+    const prev = existingMaster.find(x => x.code === s.code);
+    isValid = prev?.yahoo ?? null;
+  }
 
   output.push({
     code: s.code,
