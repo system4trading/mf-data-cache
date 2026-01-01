@@ -8,7 +8,7 @@ const OUT_DIR = "amfi";
 const BASE_URL =
   "https://www.advisorkhoj.com/mutual-funds-research/historical-NAV";
 
-const DELAY_MS = 1500;       // polite scraping
+const DELAY_MS = 1500;
 const RETRIES = 3;
 
 /* ---------------- PREP ---------------- */
@@ -16,10 +16,9 @@ const RETRIES = 3;
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const schemes = JSON.parse(fs.readFileSync(MASTER_FILE, "utf8"));
-
 console.log(`📦 Loaded ${schemes.length} schemes`);
 
-/* ---------------- HELPERS ---------------- */
+/* ---------------- FETCHER ---------------- */
 
 async function fetchHistory(code, attempt = 1) {
   const url = `${BASE_URL}/${code}`;
@@ -33,15 +32,20 @@ async function fetchHistory(code, attempt = 1) {
 
     const html = await res.text();
 
-    // Extract table rows
-    const rows = [...html.matchAll(/<tr>\s*<td>(\d{2}-\w{3}-\d{4})<\/td>\s*<td>([\d.]+)<\/td>/g)];
+    const rows = [
+      ...html.matchAll(
+        /<tr>\s*<td>(\d{2}-\w{3}-\d{4})<\/td>\s*<td>([\d.]+)<\/td>/g
+      )
+    ];
 
     if (!rows.length) return null;
 
-    return rows.map(r => ({
-      date: r[1],
-      nav: parseFloat(r[2])
-    })).reverse(); // oldest → newest
+    return rows
+      .map(r => ({
+        date: r[1],
+        nav: parseFloat(r[2])
+      }))
+      .reverse(); // oldest → newest
 
   } catch (e) {
     if (attempt < RETRIES) {
@@ -57,9 +61,8 @@ async function fetchHistory(code, attempt = 1) {
 let built = 0;
 
 for (const s of schemes) {
-  const file = `${OUT_DIR}/nav_${s.code}.json`;
-
-  if (fs.existsSync(file)) continue;
+  const outFile = `${OUT_DIR}/nav_${s.code}.json`;
+  if (fs.existsSync(outFile)) continue;
 
   console.log(`📥 Bootstrap NAV: ${s.code}`);
 
@@ -70,7 +73,7 @@ for (const s of schemes) {
     continue;
   }
 
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  fs.writeFileSync(outFile, JSON.stringify(data, null, 2));
   built++;
 
   await sleep(DELAY_MS);
