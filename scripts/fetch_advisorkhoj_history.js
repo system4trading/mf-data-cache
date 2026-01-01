@@ -2,7 +2,7 @@ import fs from "fs";
 import https from "https";
 
 const BASE = "https://www.advisorkhoj.com/mutual-funds-research/historical-NAV/";
-const OUT_DIR = "data/nav";
+const OUT_DIR = "amfi/nav";
 
 const schemes = JSON.parse(fs.readFileSync("mf_master.json", "utf8"));
 
