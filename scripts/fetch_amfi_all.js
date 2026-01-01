@@ -1,24 +1,29 @@
+// scripts/fetch_amfi_all.js
 import fs from "fs";
+import https from "https";
 
 const URL = "https://www.amfiindia.com/spages/NAVAll.txt";
-const OUT = "amfi/NAVAll.txt";
+const OUT_DIR = "mf-data-cache/tree/main/amfi";
+const OUT_FILE = `${OUT_DIR}/NAVAll.txt`;
 
-fs.mkdirSync("amfi", { recursive: true });
+fs.mkdirSync(OUT_DIR, { recursive: true });
 
-console.log("📥 Downloading NAVAll.txt from AMFI...");
+console.log("📥 Downloading AMFI NAVAll.txt...");
 
-const res = await fetch(URL, {
-  headers: {
-    "User-Agent": "Mozilla/5.0"
+https.get(URL, res => {
+  if (res.statusCode !== 200) {
+    console.error(`❌ AMFI download failed: ${res.statusCode}`);
+    process.exit(1);
   }
-});
 
-if (!res.ok) {
-  console.error("❌ Failed to download NAVAll.txt");
+  const stream = fs.createWriteStream(OUT_FILE);
+  res.pipe(stream);
+
+  stream.on("finish", () => {
+    stream.close();
+    console.log("✅ AMFI NAVAll.txt saved");
+  });
+}).on("error", err => {
+  console.error("❌ AMFI download error:", err.message);
   process.exit(1);
-}
-
-const text = await res.text();
-fs.writeFileSync(OUT, text, "utf8");
-
-console.log("✅ NAVAll.txt downloaded");
+});
