@@ -9,22 +9,12 @@ const THROTTLE_MS = 200;
 
 /* ---------------- LOAD MF DB ---------------- */
 
-let raw;
-
-try {
-  raw = fs.readFileSync(MF_DB_FILE, "utf8");
-} catch {
-  console.error("❌ mf_db.json not found");
-  process.exit(1);
-}
-
 let schemes;
 
 try {
-  schemes = JSON.parse(raw);
+  schemes = JSON.parse(fs.readFileSync(MF_DB_FILE, "utf8"));
 } catch (e) {
-  console.error("❌ Invalid JSON in mf_db.json");
-  console.error(e.message);
+  console.error("❌ Invalid or missing mf_db.json");
   process.exit(1);
 }
 
@@ -35,20 +25,24 @@ if (!Array.isArray(schemes)) {
 
 console.log(`📦 Loaded ${schemes.length} schemes`);
 
+/* ---------------- LOAD EXISTING MASTER ---------------- */
+
 let existingMaster = [];
 
-if (fs.existsSync("mf_master.json")) {
+if (fs.existsSync(OUT_FILE)) {
   try {
-    existingMaster = JSON.parse(fs.readFileSync("mf_master.json", "utf8"));
+    existingMaster = JSON.parse(fs.readFileSync(OUT_FILE, "utf8"));
   } catch {
     console.warn("⚠️ Existing mf_master.json invalid, rebuilding fully");
   }
 }
 
-const existingCodes = new Set(existingMaster.map(s => s.code));
+/* 🔥 CRITICAL FIX: use Map (O(1)) */
+const existingMap = new Map(
+  existingMaster.map(s => [String(s.code), s])
+);
 
-
-/* ---------------- HARDENED YAHOO VALIDATION ---------------- */
+/* ---------------- YAHOO VALIDATION ---------------- */
 
 async function validateYahoo(symbol) {
   try {
@@ -74,37 +68,39 @@ async function validateYahoo(symbol) {
 /* ---------------- BUILD MASTER ---------------- */
 
 const output = [];
+let validatedCount = 0;
 
 for (const s of schemes) {
+  const code = String(s.code);
+
   if (
-    !s.code ||
+    !code ||
     !s.name ||
-    isNaN(Number(s.code)) ||        // 🔥 filters "Scheme Code"
-    String(s.code).length < 4
+    isNaN(Number(code)) ||
+    code.length < 4
   ) {
     continue;
   }
 
-  const yahoo = `${s.code}.BO`;
-
-  console.log(`🔎 Validating Yahoo symbol: ${yahoo}`);
-
-  let isValid = null;
-
-  if (!existingCodes.has(s.code)) {
-    console.log(`🆕 New scheme detected → validating ${yahoo}`);
-    isValid = await validateYahoo(yahoo);
-  } else {
-    // reuse previous validation result
-    const prev = existingMaster.find(x => x.code === s.code);
-    isValid = prev?.yahoo ?? null;
+  /* ✅ Reuse existing entry if present */
+  if (existingMap.has(code)) {
+    output.push(existingMap.get(code));
+    continue;
   }
 
+  /* 🆕 New scheme only */
+  const yahoo = `${code}.BO`;
+  console.log(`🆕 Validating Yahoo symbol: ${yahoo}`);
+
+  const yahooValid = await validateYahoo(yahoo);
+  validatedCount++;
+
   output.push({
-    code: s.code,
+    code,
     name: s.name.trim(),
     category: s.category || "Unknown",
-    yahoo: isValid ? yahoo : null
+    yahoo: yahooValid ? yahoo : null,
+    yahoo_validated: yahooValid
   });
 
   await new Promise(r => setTimeout(r, THROTTLE_MS));
@@ -114,7 +110,8 @@ for (const s of schemes) {
 
 fs.writeFileSync(OUT_FILE, JSON.stringify(output, null, 2), "utf8");
 
-console.log(`✅ mf_master.json built (${output.length} schemes)`);
+console.log(
+  `✅ mf_master.json built: ${output.length} schemes (${validatedCount} newly validated)`
+);
 
 process.exit(0);
-
