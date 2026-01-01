@@ -1,8 +1,8 @@
 // scripts/build_nav_history.js
 import fs from "fs";
 
-const NAVALL = "data/amfi/NAVAll.txt";
-const OUT_DIR = "data/nav";
+const NAVALL = "amfi/NAVAll.txt";
+const OUT_DIR = "amfi/nav";
 
 if (!fs.existsSync(NAVALL)) {
   console.error("❌ NAVAll.txt missing");
