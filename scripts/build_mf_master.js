@@ -67,15 +67,6 @@ for (const s of schemes) {
 
   const yahoo = `${s.code}.BO`;
 
-      // ✅ UPDATE
-  const existing = new Set(existingMaster.map(s => s.code));
-
-  for (const scheme of allSchemes) {
-    if (!existing.has(scheme.code)) {
-      validateYahoo(...)
-    }
-  }
-
   console.log(`🔎 Validating Yahoo symbol: ${yahoo}`);
 
   const isValid = await validateYahoo(yahoo);
