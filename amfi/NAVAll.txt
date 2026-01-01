@@ -9110,10 +9110,10 @@ Bajaj Finserv Mutual Fund
  
 Bandhan Mutual Fund
  
-152324;INF194KB1HM7;-;Bandhan Multi Asset Allocation Fund - Direct Plan - Growth;14.0456;31-Dec-2025
-152323;INF194KB1HN5;INF194KB1HO3;Bandhan Multi Asset Allocation Fund - Direct Plan - IDCW;14.0456;31-Dec-2025
-152326;INF194KB1HJ3;-;Bandhan Multi Asset Allocation Fund - Regular Plan - Growth;13.6347;31-Dec-2025
-152325;INF194KB1HK1;INF194KB1HL9;Bandhan Multi Asset Allocation Fund - Regular Plan - IDCW;13.6347;31-Dec-2025
+152324;INF194KB1HM7;-;Bandhan Multi Asset Allocation Fund - Direct Plan - Growth;14.0741;01-Jan-2026
+152323;INF194KB1HN5;INF194KB1HO3;Bandhan Multi Asset Allocation Fund - Direct Plan - IDCW;14.0741;01-Jan-2026
+152326;INF194KB1HJ3;-;Bandhan Multi Asset Allocation Fund - Regular Plan - Growth;13.6619;01-Jan-2026
+152325;INF194KB1HK1;INF194KB1HL9;Bandhan Multi Asset Allocation Fund - Regular Plan - IDCW;13.6619;01-Jan-2026
  
 Bank of India Mutual Fund
  
