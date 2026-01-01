@@ -1,26 +1,33 @@
 import fs from "fs";
+import fetch from "node-fetch";
 
-const MASTER = JSON.parse(fs.readFileSync("mf_master.json", "utf8"));
-const OUT = "yahoo";
+const MASTER = JSON.parse(fs.readFileSync("mf_master.json"));
+const DIR = "amfi";
 
-if (!fs.existsSync(OUT)) fs.mkdirSync(OUT);
+function toISO(ts) {
+  return new Date(ts * 1000).toISOString().slice(0, 10);
+}
 
 for (const s of MASTER) {
   if (!s.yahoo) continue;
 
-  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${s.yahoo}?range=1y`;
+  const file = `${DIR}/nav_${s.code}.json`;
+  if (fs.existsSync(file)) continue; // backfill once
 
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
+  console.log(`📊 Yahoo backfill: ${s.code}`);
 
-    const exists = !!json?.chart?.result?.[0];
+  const r = await fetch(
+    `https://query1.finance.yahoo.com/v8/finance/chart/${s.yahoo}?range=10y&interval=1d`
+  );
 
-    fs.writeFileSync(
-      `${OUT}/validate_${s.code}.json`,
-      JSON.stringify({ yahoo: s.yahoo, exists }, null, 2)
-    );
-  } catch {
-    console.warn(`⚠️ Yahoo validation failed: ${s.code}`);
-  }
+  const j = await r.json();
+  const res = j.chart?.result?.[0];
+  if (!res) continue;
+
+  const nav = res.timestamp.map((t, i) => ({
+    date: toISO(t),
+    nav: res.indicators.adjclose[0].adjclose[i]
+  })).filter(x => x.nav);
+
+  fs.writeFileSync(file, JSON.stringify(nav, null, 2));
 }
