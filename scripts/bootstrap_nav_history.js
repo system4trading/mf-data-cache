@@ -48,10 +48,10 @@ async function fetchHistory(code, attempt = 1) {
         date: r[1],
         nav: parseFloat(r[2])
       }))
-      .reverse(); // oldest → newest
+      .reverse();
 
-  } catch (e) {
-    if (attempt < RETRIES) {
+  } catch {
+    if (attempt < 3) {
       await sleep(3000);
       return fetchHistory(code, attempt + 1);
     }
