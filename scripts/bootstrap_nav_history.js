@@ -3,60 +3,47 @@ import { setTimeout as sleep } from "timers/promises";
 
 /* ---------------- CONFIG ---------------- */
 
-const MASTER = "mf_master.json";
+const MASTER_FILE = "mf_master.json";
 const OUT_DIR = "amfi";
-const BASE =
-  "https://www.advisorkhoj.com/mutual-funds-research/historical-NAV";
-
-const DELAY_MS = 2000;
-const RETRIES = 3;
+const YEARS = 10;
+const DELAY_MS = 800;
 
 /* ---------------- PREP ---------------- */
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const schemes = JSON.parse(fs.readFileSync(MASTER, "utf8"));
-console.log(`📦 Loaded ${schemes.length} schemes`);
+const schemes = JSON.parse(fs.readFileSync(MASTER_FILE, "utf8"))
+  .filter(s => s.yahoo);
+
+console.log(`📦 Loaded ${schemes.length} Yahoo-validated schemes`);
 
 /* ---------------- FETCH ---------------- */
 
-async function fetchHistory(code, attempt = 1) {
-  try {
-    const res = await fetch(`${BASE}/${code}`, {
-      headers: {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "text/html",
-        "Accept-Language": "en-US,en;q=0.9",
-        "Referer": "https://www.advisorkhoj.com/"
-      }
-    });
+async function fetchYahooHistory(symbol) {
+  const to = Math.floor(Date.now() / 1000);
+  const from = to - YEARS * 365 * 24 * 60 * 60;
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?period1=${from}&period2=${to}&interval=1d&events=div`;
 
-    const html = await res.text();
+  const res = await fetch(url, {
+    headers: { "User-Agent": "Mozilla/5.0" }
+  });
 
-    const rows = [
-      ...html.matchAll(
-        /<td[^>]*>(\d{2}-[A-Za-z]{3}-\d{4})<\/td>\s*<td[^>]*>([\d.]+)<\/td>/g
-      )
-    ];
+  if (!res.ok) return null;
 
-    if (!rows.length) return null;
+  const json = await res.json();
+  const r = json?.chart?.result?.[0];
+  if (!r) return null;
 
-    return rows
-      .map(r => ({
-        date: r[1],
-        nav: parseFloat(r[2])
-      }))
-      .reverse();
+  const ts = r.timestamp;
+  const nav = r.indicators?.quote?.[0]?.close;
 
-  } catch {
-    if (attempt < 3) {
-      await sleep(3000);
-      return fetchHistory(code, attempt + 1);
-    }
-    return null;
-  }
+  if (!ts || !nav) return null;
+
+  return ts.map((t, i) => ({
+    date: new Date(t * 1000).toISOString().slice(0, 10),
+    nav: nav[i]
+  })).filter(x => x.nav != null);
 }
 
 /* ---------------- MAIN ---------------- */
@@ -64,19 +51,19 @@ async function fetchHistory(code, attempt = 1) {
 let built = 0;
 
 for (const s of schemes) {
-  const out = `${OUT_DIR}/nav_${s.code}.json`;
-  if (fs.existsSync(out)) continue;
+  const outFile = `${OUT_DIR}/nav_${s.code}.json`;
+  if (fs.existsSync(outFile)) continue;
 
-  console.log(`📥 Bootstrap NAV: ${s.code}`);
+  console.log(`📥 Yahoo NAV: ${s.code}`);
 
-  const data = await fetchHistory(s.code);
+  const data = await fetchYahooHistory(s.yahoo);
 
-  if (!data) {
-    console.warn(`⚠️ No history for ${s.code}`);
+  if (!data || data.length < 500) {
+    console.warn(`⚠️ Insufficient data for ${s.code}`);
     continue;
   }
 
-  fs.writeFileSync(out, JSON.stringify(data, null, 2));
+  fs.writeFileSync(outFile, JSON.stringify(data, null, 2));
   built++;
 
   await sleep(DELAY_MS);
