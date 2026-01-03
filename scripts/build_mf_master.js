@@ -110,3 +110,8 @@ console.log(
 );
 
 process.exit(0);
+
+console.warn(
+  "⚠️ Yahoo does not provide MF NAV history — skipping historical fetch"
+);
+process.exit(0);
