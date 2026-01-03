@@ -5,7 +5,7 @@ const SYMBOL = "^NSEI";
 const OUT_DIR = "nifty";
 const OUT_FILE = `${OUT_DIR}/nifty50.json`;
 
-const RANGE = "5y";
+const RANGE = "10y";
 const INTERVAL = "1d";
 
 const URL = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
