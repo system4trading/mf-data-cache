@@ -52,18 +52,28 @@ let built = 0;
 
 for (const s of schemes) {
   const outFile = `${OUT_DIR}/nav_${s.code}.json`;
-  if (fs.existsSync(outFile)) continue;
 
-  console.log(`📥 Yahoo NAV: ${s.code}`);
+  if (fs.existsSync(outFile)) {
+    console.log(`⏭️ Exists: ${s.code}`);
+    continue;
+  }
+
+  console.log(`📥 Yahoo NAV: ${s.code} (${s.yahoo})`);
 
   const data = await fetchYahooHistory(s.yahoo);
 
-  if (!data || data.length < 500) {
-    console.warn(`⚠️ Insufficient data for ${s.code}`);
+  if (!data) {
+    console.warn(`❌ No Yahoo response: ${s.code}`);
+    continue;
+  }
+
+  if (data.length < 50) {
+    console.warn(`⚠️ Too short (${data.length}): ${s.code}`);
     continue;
   }
 
   fs.writeFileSync(outFile, JSON.stringify(data, null, 2));
+  console.log(`✅ Written ${data.length} rows for ${s.code}`);
   built++;
 
   await sleep(DELAY_MS);
