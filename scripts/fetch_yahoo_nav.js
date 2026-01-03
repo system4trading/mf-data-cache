@@ -30,3 +30,8 @@ for (const s of MASTER) {
 
   fs.writeFileSync(file, JSON.stringify(nav, null, 2));
 }
+
+console.warn(
+  "⚠️ Yahoo does not provide MF NAV history — skipping historical fetch"
+);
+process.exit(0);
