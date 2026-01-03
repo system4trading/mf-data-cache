@@ -37670,6 +37670,11 @@
     "category": "Gold"
   },
   {
+    "code": "154092",
+    "name": "The Wealth Company Gold ETF",
+    "category": "Gold"
+  },
+  {
     "code": "153337",
     "name": "Union Gold ETF",
     "category": "Gold"
@@ -43093,6 +43098,36 @@
     "code": "149480",
     "name": "Sundaram Nifty 100 Equal Weight Fund (Formerly Known as Principal Nifty 100 Equal Weight Fund-Income Distribution CUM Capital Withdrawal",
     "category": "Other"
+  },
+  {
+    "code": "154066",
+    "name": "Tata BSE Multicap Consumption 50:30:20 Index Fund - Direct Plan Growth Option",
+    "category": "Index Fund"
+  },
+  {
+    "code": "154069",
+    "name": "Tata BSE Multicap Consumption 50:30:20 Index Fund - Direct Plan IDCW Payout Option",
+    "category": "Index Fund"
+  },
+  {
+    "code": "154068",
+    "name": "Tata BSE Multicap Consumption 50:30:20 Index Fund - Direct Plan IDCW Reinvestment Option",
+    "category": "Index Fund"
+  },
+  {
+    "code": "154064",
+    "name": "Tata BSE Multicap Consumption 50:30:20 Index Fund - Regular Plan Growth Option",
+    "category": "Index Fund"
+  },
+  {
+    "code": "154065",
+    "name": "Tata BSE Multicap Consumption 50:30:20 Index Fund - Regular Plan IDCW Payout Option",
+    "category": "Index Fund"
+  },
+  {
+    "code": "154067",
+    "name": "Tata BSE Multicap Consumption 50:30:20 Index Fund - Regular Plan IDCW Reinvestment Option",
+    "category": "Index Fund"
   },
   {
     "code": "153420",
@@ -66237,26 +66272,6 @@
   {
     "code": "149042",
     "name": "SBI Fixed Maturity Plan (FMP) - Series 46 (1850 Days) - Regular Plan - Income Distribution cum Capital Withdrawal Option (IDCW)",
-    "category": "Other"
-  },
-  {
-    "code": "149111",
-    "name": "SBI Fixed Maturity Plan (FMP) - Series 48 (1458 Days) - Direct Plan - Growth",
-    "category": "Other"
-  },
-  {
-    "code": "149108",
-    "name": "SBI Fixed Maturity Plan (FMP) - Series 48 (1458 Days) - Direct Plan - Income Distribution cum Capital Withdrawal Option (IDCW)",
-    "category": "Other"
-  },
-  {
-    "code": "149109",
-    "name": "SBI Fixed Maturity Plan (FMP) - Series 48 (1458 Days) - Regular Plan - Growth",
-    "category": "Other"
-  },
-  {
-    "code": "149110",
-    "name": "SBI Fixed Maturity Plan (FMP) - Series 48 (1458 Days) - Regular Plan - Income Distribution cum Capital Withdrawal Option (IDCW)",
     "category": "Other"
   },
   {
