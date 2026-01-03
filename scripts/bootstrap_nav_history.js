@@ -23,7 +23,12 @@ console.log(`📦 Loaded ${schemes.length} schemes`);
 async function fetchHistory(code, attempt = 1) {
   try {
     const res = await fetch(`${BASE}/${code}`, {
-      headers: { "User-Agent": "Mozilla/5.0" }
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "text/html",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://www.advisorkhoj.com/"
+      }
     });
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
