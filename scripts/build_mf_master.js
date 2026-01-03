@@ -46,20 +46,15 @@ const existingMap = new Map(
 
 async function validateYahoo(symbol) {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), YAHOO_TIMEOUT_MS);
-
     const res = await fetch(
-      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`,
-      { signal: controller.signal }
+      `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`
     );
+    const j = await res.json();
 
-    clearTimeout(timeout);
+    const r = j?.chart?.result?.[0];
 
-    if (!res.ok) return false;
-
-    const json = await res.json();
-    return Array.isArray(json?.chart?.result);
+    // 🔒 Validation = symbol exists (not NAV data!)
+    return !!r?.meta?.symbol;
   } catch {
     return false;
   }
