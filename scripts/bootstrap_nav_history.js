@@ -32,7 +32,7 @@ async function fetchHistory(code, attempt = 1) {
 
     const rows = [
       ...html.matchAll(
-        /<tr>\s*<td>(\d{2}-\w{3}-\d{4})<\/td>\s*<td>([\d.]+)<\/td>/g
+        /<td[^>]*>(\d{2}-[A-Za-z]{3}-\d{4})<\/td>\s*<td[^>]*>([\d.]+)<\/td>/g
       )
     ];
 
