@@ -1,0 +1,6 @@
+# External large datasets
+external_data/
+*.prof
+*.db
+*.zst
+*.db-journal
