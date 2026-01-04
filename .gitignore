@@ -1,5 +1,5 @@
 # External large datasets
-external_data/
+data/
 *.prof
 *.db
 *.zst
