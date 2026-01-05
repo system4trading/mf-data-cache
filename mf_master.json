@@ -27895,27 +27895,6 @@
     "yahoo_validated": true
   },
   {
-    "code": "100378",
-    "name": "NIPPON INDIA VISION FUND - IDCW Option",
-    "category": "Other",
-    "yahoo": "100378.BO",
-    "yahoo_validated": true
-  },
-  {
-    "code": "100379",
-    "name": "Nippon India Vision Fund-GROWTH PLAN-Bonus Option",
-    "category": "Other",
-    "yahoo": "100379.BO",
-    "yahoo_validated": true
-  },
-  {
-    "code": "100380",
-    "name": "Nippon India Vision Fund-GROWTH PLAN-Growth Option",
-    "category": "Other",
-    "yahoo": "100380.BO",
-    "yahoo_validated": true
-  },
-  {
     "code": "118676",
     "name": "NIPPON INDIA VISION LARGE & MID CAP  FUND - DIRECT Plan - IDCW Option",
     "category": "Equity Mid Cap",
@@ -27941,6 +27920,27 @@
     "name": "Nippon India Vision Large & Mid Cap Fund Institutional Dividend Plan",
     "category": "Equity Mid Cap",
     "yahoo": "106255.BO",
+    "yahoo_validated": true
+  },
+  {
+    "code": "100378",
+    "name": "NIPPON INDIA VISION FUND - IDCW Option",
+    "category": "Other",
+    "yahoo": "100378.BO",
+    "yahoo_validated": true
+  },
+  {
+    "code": "100379",
+    "name": "Nippon India Vision Fund-GROWTH PLAN-Bonus Option",
+    "category": "Other",
+    "yahoo": "100379.BO",
+    "yahoo_validated": true
+  },
+  {
+    "code": "100380",
+    "name": "Nippon India Vision Fund-GROWTH PLAN-Growth Option",
+    "category": "Other",
+    "yahoo": "100380.BO",
     "yahoo_validated": true
   },
   {
