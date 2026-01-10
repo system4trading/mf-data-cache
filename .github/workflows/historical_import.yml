@@ -25,11 +25,11 @@ jobs:
         unzstd funds.db.zst
 
     - name: Run ETL
-      env:
-        DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
       run: |
         chmod +x etl/run_etl.sh
-        etl/run_etl.sh
+        ./etl/run_etl.sh
+      env:
+        SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
 
     - name: Cleanup
       run: rm -f funds.db funds.db.zst analytics.duckdb
