@@ -6,7 +6,7 @@ rm -f analytics.duckdb
 rm -f analytics.duckdb.wal
 
 echo "🦆 Creating fresh DuckDB database"
-duckdb analytics.duckdb <<'EOF'
+duckdb analytics.duckdb <<EOF
 INSTALL sqlite;
 LOAD sqlite;
 INSTALL postgres;
