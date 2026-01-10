@@ -1,73 +1,39 @@
-name: Historical Import (AMFI)
+name: Historical MF Import
 
 on:
   workflow_dispatch:
 
 jobs:
-  historical-import:
+  import:
     runs-on: ubuntu-latest
 
     steps:
-      # ----------------------------------
-      # Checkout repository
-      # ----------------------------------
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # ----------------------------------
-      # Install system dependencies
-      # ----------------------------------
-      - name: Install system dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget zstd unzip postgresql-client
+          sudo apt-get install -y zstd postgresql-client
 
-      # ----------------------------------
-      # Download historical SQLite database
-      # ----------------------------------
-      - name: Download funds.db
-        run: |
-          wget https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst
-          unzstd funds.db.zst
-
-      # ----------------------------------
-      # Install DuckDB CLI
-      # ----------------------------------
       - name: Install DuckDB
         run: |
-          wget https://github.com/duckdb/duckdb/releases/download/v0.10.2/duckdb_cli-linux-amd64.zip
-          unzip duckdb_cli-linux-amd64.zip
+          curl -L https://github.com/duckdb/duckdb/releases/download/v0.10.2/duckdb-linux-amd64.zip -o duckdb.zip
+          unzip duckdb.zip
+          chmod +x duckdb
           sudo mv duckdb /usr/local/bin/
-          duckdb --version
 
-      # ----------------------------------
-      # Run ETL: SQLite → DuckDB → CSV
-      # ----------------------------------
       - name: Run DuckDB ETL
         run: |
           chmod +x etl/run_etl.sh
           ./etl/run_etl.sh
 
-      # ----------------------------------
-      # Load CSVs into Supabase Postgres
-      # ----------------------------------
-      - name: Load data into Supabase
+      - name: Load CSVs into Supabase
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
         run: |
-          echo "📤 Loading AMC data"
-          psql "$SUPABASE_DB_URL" -c "\copy amc FROM 'export/amc.csv' CSV HEADER"
-
-          echo "📤 Loading scheme master"
-          psql "$SUPABASE_DB_URL" -c "\copy mf_schemes FROM 'export/mf_schemes.csv' CSV HEADER"
-
-          echo "📤 Loading NAV history"
-          psql "$SUPABASE_DB_URL" -c "\copy mf_nav_history FROM 'export/mf_nav_history.csv' CSV HEADER"
-
-      # ----------------------------------
-      # Cleanup large temporary files
-      # ----------------------------------
-      - name: Cleanup
-        run: |
-          rm -f funds.db
-          rm -f funds.db.zst
+          psql "$SUPABASE_DB_URL" <<EOF
+          \copy amc FROM 'export/amc.csv' CSV HEADER
+          \copy mf_schemes FROM 'export/mf_schemes.csv' CSV HEADER
+          \copy mf_nav_history FROM 'export/mf_nav_history.csv' CSV HEADER
+          EOF
