@@ -1,30 +1,31 @@
 #!/bin/bash
 set -e
 
-echo "🧹 Cleaning previous DuckDB artifacts"
-rm -f analytics.duckdb analytics.duckdb.wal
+echo "🧹 Cleaning DuckDB artifacts"
+rm -f analytics.duckdb
+rm -f analytics.duckdb.wal
 
-echo "🦆 Creating fresh DuckDB database"
+echo "🦆 Creating DuckDB database and loading SQLite"
 duckdb analytics.duckdb <<EOF
 INSTALL sqlite;
 LOAD sqlite;
+
 INSTALL postgres;
 LOAD postgres;
 
+-- Attach SQLite source
 ATTACH 'funds.db' AS mf (TYPE sqlite);
-ATTACH '${SUPABASE_DB_URL}' AS pg (TYPE postgres);
 
--- ===============================
--- LOAD AMCs
--- ===============================
+-- Attach Supabase Postgres
+ATTACH '${SUPABASE_DB_URL}' AS pg (TYPE postgres, SCHEMA 'public');
+
+-- Load AMC
 INSERT INTO pg.amc (amc_code, amc_name)
 SELECT DISTINCT amc_code, amc_name
 FROM mf.amcs
-ON CONFLICT (amc_code) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
--- ===============================
--- LOAD SCHEMES
--- ===============================
+-- Load Schemes
 INSERT INTO pg.mf_schemes (
   scheme_code,
   scheme_name,
@@ -45,9 +46,7 @@ SELECT
 FROM mf.schemes
 ON CONFLICT (scheme_code) DO NOTHING;
 
--- ===============================
--- LOAD NAV HISTORY
--- ===============================
+-- Load NAV history
 INSERT INTO pg.mf_nav_history (scheme_code, nav_date, nav)
 SELECT
   scheme_code,
@@ -58,7 +57,8 @@ ON CONFLICT (scheme_code, nav_date) DO NOTHING;
 
 EOF
 
-echo "🧹 Removing DuckDB temp files"
-rm -f analytics.duckdb analytics.duckdb.wal
+echo "🧹 Cleanup"
+rm -f analytics.duckdb
+rm -f analytics.duckdb.wal
 
 echo "✅ ETL completed successfully"
