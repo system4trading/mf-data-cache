@@ -4,3 +4,9 @@ db/
 *.db
 *.zst
 *.db-journal
+analytics.duckdb
+*.duckdb
+analytics.duckdb
+*.duckdb
+analytics.duckdb
+*.duckdb
