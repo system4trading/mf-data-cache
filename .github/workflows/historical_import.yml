@@ -23,8 +23,7 @@ jobs:
 
       - name: Run DuckDB ETL
         run: |
-          chmod +x etl/run_etl.sh
-          ./etl/run_etl.sh
+          python etl/run_etl.py
 
       - name: Load CSVs into Supabase
         env:
