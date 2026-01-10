@@ -1,0 +1,32 @@
+name: One-time Historical Import
+
+on:
+  workflow_dispatch:
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install DuckDB
+      run: |
+        curl -L https://github.com/duckdb/duckdb/releases/latest/download/duckdb-linux-amd64.zip -o duckdb.zip
+        unzip duckdb.zip
+        sudo mv duckdb /usr/local/bin/
+
+    - name: Download funds.db
+      run: |
+        wget https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst
+        unzstd funds.db.zst
+
+    - name: Run ETL
+      env:
+        DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+      run: |
+        chmod +x etl/run_etl.sh
+        etl/run_etl.sh
+
+    - name: Cleanup
+      run: rm -f funds.db funds.db.zst analytics.duckdb
