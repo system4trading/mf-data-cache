@@ -2,8 +2,7 @@
 set -e
 
 echo "🧹 Cleaning previous DuckDB artifacts"
-rm -f analytics.duckdb
-rm -f analytics.duckdb.wal
+rm -f analytics.duckdb analytics.duckdb.wal
 
 echo "🦆 Creating fresh DuckDB database"
 duckdb analytics.duckdb <<EOF
@@ -12,21 +11,20 @@ LOAD sqlite;
 INSTALL postgres;
 LOAD postgres;
 
--- Attach SQLite source (funds.db)
 ATTACH 'funds.db' AS mf (TYPE sqlite);
-
--- Attach Supabase Postgres (env var required)
 ATTACH '${SUPABASE_DB_URL}' AS pg (TYPE postgres);
 
 -- ===============================
--- LOAD DIMENSIONS
+-- LOAD AMCs
 -- ===============================
-
 INSERT INTO pg.amc (amc_code, amc_name)
 SELECT DISTINCT amc_code, amc_name
 FROM mf.amcs
 ON CONFLICT (amc_code) DO NOTHING;
 
+-- ===============================
+-- LOAD SCHEMES
+-- ===============================
 INSERT INTO pg.mf_schemes (
   scheme_code,
   scheme_name,
@@ -48,9 +46,8 @@ FROM mf.schemes
 ON CONFLICT (scheme_code) DO NOTHING;
 
 -- ===============================
--- LOAD FACT: NAV HISTORY
+-- LOAD NAV HISTORY
 -- ===============================
-
 INSERT INTO pg.mf_nav_history (scheme_code, nav_date, nav)
 SELECT
   scheme_code,
@@ -61,8 +58,7 @@ ON CONFLICT (scheme_code, nav_date) DO NOTHING;
 
 EOF
 
-echo "🧹 Removing temporary DuckDB files"
-rm -f analytics.duckdb
-rm -f analytics.duckdb.wal
+echo "🧹 Removing DuckDB temp files"
+rm -f analytics.duckdb analytics.duckdb.wal
 
 echo "✅ ETL completed successfully"
