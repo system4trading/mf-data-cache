@@ -10,3 +10,6 @@ analytics.duckdb
 *.duckdb
 analytics.duckdb
 *.duckdb
+export/*.csv
+*.duckdb
+analytics.duckdb
