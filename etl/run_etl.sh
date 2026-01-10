@@ -11,6 +11,9 @@ duckdb analytics.duckdb <<EOF
 INSTALL sqlite;
 LOAD sqlite;
 
+INSTALL postgres;
+LOAD postgres;
+
 -- Attach SQLite source
 ATTACH 'funds.db' AS mf (TYPE sqlite);
 
