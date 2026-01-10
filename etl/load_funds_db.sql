@@ -11,7 +11,7 @@ CREATE TABLE amc_duckdb AS
 SELECT
   amc_code,
   amc_name
-FROM mf.amc;
+FROM mf.amcs;
 
 CREATE TABLE mf_schemes_duckdb AS
 SELECT
@@ -22,7 +22,7 @@ SELECT
   amc_code,
   launch_date,
   isin
-FROM mf.scheme;
+FROM mf.schemes;
 
 CREATE TABLE mf_nav_history_duckdb AS
 SELECT
