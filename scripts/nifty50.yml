@@ -1,4 +1,4 @@
-name: Nightly Data Pipeline
+name: Nifty50 Data Pipeline
 
 on:
   schedule:
@@ -41,5 +41,5 @@ jobs:
           git config user.email "bot@github.com"
 
           git add .
-          git commit -m "Nightly data update (AMFI + Nifty)" || echo "No changes"
+          git commit -m "Nifty50 data update (Nifty)" || echo "No changes"
           git push
