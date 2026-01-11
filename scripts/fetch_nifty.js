@@ -2,7 +2,7 @@ import fs from "fs";
 import crypto from "crypto";
 
 const SYMBOL = "^NSEI";
-const OUT_DIR = "nifty";
+const OUT_DIR = "data/benchmarks/nifty50";
 const OUT_FILE = `${OUT_DIR}/nifty50.json`;
 
 const RANGE = "10y";
