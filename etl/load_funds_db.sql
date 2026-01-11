@@ -1,32 +1,15 @@
 INSTALL sqlite;
 LOAD sqlite;
 
+-- Attach SQLite NAV database
 ATTACH 'funds.db' AS mf (TYPE sqlite);
 
--- ======================
--- Create DuckDB tables
--- ======================
-
-CREATE TABLE amc_duckdb AS
+-- Create working NAV table in DuckDB
+CREATE TABLE nav_raw AS
 SELECT
-  amc_code,
-  amc_name
-FROM mf.amcs;
-
-CREATE TABLE mf_schemes_duckdb AS
-SELECT
-  scheme_code,
-  scheme_name,
-  category,
-  sub_category,
-  amc_code,
-  launch_date,
-  isin
-FROM mf.schemes;
-
-CREATE TABLE mf_nav_history_duckdb AS
-SELECT
-  scheme_code,
-  date AS nav_date,
-  nav
+  scheme_code::INTEGER,
+  date::DATE AS nav_date,
+  nav::DOUBLE
 FROM mf.nav;
+
+SELECT COUNT(*) AS nav_rows FROM nav_raw;
