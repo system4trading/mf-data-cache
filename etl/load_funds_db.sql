@@ -1,15 +1,14 @@
 -- =========================================
--- DuckDB: Load data from captn3m0 funds.db
+-- DuckDB: Load NAV data from funds.db
 -- =========================================
 
 INSTALL sqlite;
 LOAD sqlite;
 
--- Attach the SQLite database
 ATTACH 'funds.db' AS mf (TYPE sqlite);
 
 -- -----------------------------------------
--- RAW NAV TABLE (DuckDB temp layer)
+-- RAW NAV TABLE
 -- -----------------------------------------
 DROP TABLE IF EXISTS nav_raw;
 
@@ -20,12 +19,12 @@ CREATE TABLE nav_raw (
 );
 
 -- -----------------------------------------
--- LOAD NAV DATA (FIXED DATE PARSING)
+-- LOAD NAV DATA (FIXED: BLOB → VARCHAR → DATE)
 -- -----------------------------------------
 INSERT INTO nav_raw (scheme_code, nav_date, nav)
 SELECT
   scheme_code,
-  STRPTIME(date, '%Y-%m-%d')::DATE AS nav_date,
+  STRPTIME(CAST(date AS VARCHAR), '%Y-%m-%d')::DATE AS nav_date,
   nav
 FROM mf.nav
 WHERE nav IS NOT NULL;
