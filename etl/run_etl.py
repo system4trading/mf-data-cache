@@ -30,3 +30,12 @@ os.remove("funds.db.zst")
 os.remove("analytics.duckdb")
 
 print("✅ ETL complete")
+
+print("📋 Inspecting SQLite tables inside funds.db")
+tables = con.execute("""
+SELECT name
+FROM mf.sqlite_master
+WHERE type='table'
+""").fetchall()
+
+print("Found tables:", tables)
