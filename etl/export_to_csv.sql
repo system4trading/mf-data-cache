@@ -1,7 +1,7 @@
 -- =========================================
--- Export NAV data for Postgres load
+-- DuckDB: Export NAV data to CSV
 -- =========================================
 
 COPY nav_clean
 TO 'export/mf_nav_history.csv'
-(WITH HEADER, DELIMITER ',');
+(HEADER true, DELIMITER ',');
