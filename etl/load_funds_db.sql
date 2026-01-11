@@ -1,9 +1,27 @@
+-- =========================================
+-- DuckDB: Load data from captn3m0 funds.db
+-- =========================================
+
 INSTALL sqlite;
 LOAD sqlite;
 
--- Attach SQLite NAV database
+-- Attach the SQLite database
 ATTACH 'funds.db' AS mf (TYPE sqlite);
 
+-- -----------------------------------------
+-- RAW NAV TABLE (DuckDB temp layer)
+-- -----------------------------------------
+DROP TABLE IF EXISTS nav_raw;
+
+CREATE TABLE nav_raw (
+  scheme_code INTEGER,
+  nav_date DATE,
+  nav DOUBLE
+);
+
+-- -----------------------------------------
+-- LOAD NAV DATA (FIXED DATE PARSING)
+-- -----------------------------------------
 INSERT INTO nav_raw (scheme_code, nav_date, nav)
 SELECT
   scheme_code,
@@ -12,12 +30,7 @@ SELECT
 FROM mf.nav
 WHERE nav IS NOT NULL;
 
--- Create working NAV table in DuckDB
-CREATE TABLE nav_raw AS
-SELECT
-  scheme_code::INTEGER,
-  date::DATE AS nav_date,
-  nav::DOUBLE
-FROM mf.nav;
-
-SELECT COUNT(*) AS nav_rows FROM nav_raw;
+-- -----------------------------------------
+-- SANITY CHECK
+-- -----------------------------------------
+SELECT COUNT(*) AS nav_rows_loaded FROM nav_raw;
