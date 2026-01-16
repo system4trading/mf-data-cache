@@ -1,31 +1,42 @@
 import duckdb
-import os
 import subprocess
+import os
+import requests
+import zstandard as zstd
+
+DB_ZST = "funds.db.zst"
+DB_FILE = "funds.db"
 
 print("⬇️ Downloading funds.db")
-subprocess.run(
-    "wget -q https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst",
-    shell=True,
-    check=True
-)
-subprocess.run("unzstd -q funds.db.zst", shell=True, check=True)
+url = "https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst"
+r = requests.get(url, stream=True)
+with open(DB_ZST, "wb") as f:
+    for chunk in r.iter_content(chunk_size=8192):
+        f.write(chunk)
+
+print("📦 Decompressing")
+with open(DB_ZST, "rb") as f_in:
+    with open(DB_FILE, "wb") as f_out:
+        dctx = zstd.ZstdDecompressor()
+        dctx.copy_stream(f_in, f_out)
 
 print("🦆 Creating DuckDB database")
-con = duckdb.connect(database="analytics.duckdb")
+con = duckdb.connect("analytics.duckdb")
 
-for sql_file in [
-    "etl/load_funds_db.sql",
-    "etl/transform.sql",
-    "etl/export_to_csv.sql",
-]:
-    print(f"▶ Running {sql_file}")
-    with open(sql_file, "r") as f:
+def run_sql(path):
+    print(f"▶ Running {path}")
+    with open(path) as f:
         con.execute(f.read())
 
-print("🧹 Cleanup")
-os.remove("funds.db")
-os.remove("funds.db.zst")
-os.remove("analytics.duckdb")
+run_sql("etl/load_funds_db.sql")
+run_sql("etl/transform.sql")
+run_sql("etl/export_to_csv.sql")
 
 con.close()
+
+print("🧹 Cleanup")
+os.remove("analytics.duckdb")
+os.remove(DB_FILE)
+os.remove(DB_ZST)
+
 print("✅ ETL complete")
