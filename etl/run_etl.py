@@ -22,20 +22,10 @@ for sql_file in [
     with open(sql_file, "r") as f:
         con.execute(f.read())
 
-con.close()
-
 print("🧹 Cleanup")
 os.remove("funds.db")
 os.remove("funds.db.zst")
 os.remove("analytics.duckdb")
 
+con.close()
 print("✅ ETL complete")
-
-print("📋 Inspecting SQLite tables inside funds.db")
-tables = con.execute("""
-SELECT name
-FROM mf.sqlite_master
-WHERE type='table'
-""").fetchall()
-
-print("Found tables:", tables)
