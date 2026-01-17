@@ -27,9 +27,8 @@ jobs:
 
       - name: Download AMFI Scheme Master
         run: |
-          curl -fsSL \
-            https://www.amfiindia.com/spages/Master-File.txt \
-            -o raw/amfi_master.txt
+          wget https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst
+          unzstd funds.db.zst
 
       - name: Download historical NAVALL (2006 → present)
         run: |
@@ -45,3 +44,4 @@ jobs:
         with:
           name: mf-historical-csv
           path: export/
+
