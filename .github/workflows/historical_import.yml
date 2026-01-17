@@ -1,32 +1,47 @@
-name: Historical Import (DuckDB → CSV)
+name: Historical MF Import (DuckDB)
 
 on:
   workflow_dispatch:
 
 jobs:
-  historical-import:
+  etl:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 150
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Install DuckDB
+        run: pip install duckdb
+
+      - name: Prepare directories
         run: |
-          pip install duckdb requests zstandard
+          mkdir -p raw/navall
+          mkdir -p export
+
+      - name: Download AMFI Scheme Master
+        run: |
+          curl -fsSL \
+            https://www.amfiindia.com/spages/Master-File.txt \
+            -o raw/amfi_master.txt
+
+      - name: Download historical NAVALL (2006 → present)
+        run: |
+          git clone --depth 1 https://github.com/captn3m0/historical-mf-data temp_nav
+          cp -r temp_nav/data/* raw/navall/
+          rm -rf temp_nav
 
       - name: Run DuckDB ETL
-        run: |
-          python etl/run_etl.py
+        run: python etl/run_etl.py
 
       - name: Upload CSV artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mf-historical-csv
-          path: export/*.csv
+          path: export/
