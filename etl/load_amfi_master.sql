@@ -38,5 +38,5 @@ SELECT
   closure_date
 FROM mf.schemes
 WHERE scheme_code IS NOT NULL;
-ON CONFLICT DO NOTHING;
+
 
