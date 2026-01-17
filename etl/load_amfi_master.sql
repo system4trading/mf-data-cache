@@ -1,33 +1,42 @@
-COPY amfi_master_raw
-FROM 'raw/amfi_master.txt'
-(DELIMITER '|', HEADER);
+-- Enable SQLite support
+INSTALL sqlite;
+LOAD sqlite;
 
-INSERT INTO amc (amc_code, amc_name)
-SELECT DISTINCT amc_code, amc_name
-FROM amfi_master_raw
-WHERE amc_code IS NOT NULL
-ON CONFLICT DO NOTHING;
+-- Attach captn3m0 SQLite database
+ATTACH 'funds.db' AS mf (TYPE sqlite);
 
-INSERT INTO mf_schemes (
+-- Clear previous load (safe for reruns)
+DELETE FROM amfi_master_raw;
+
+-- Insert AMFI scheme master data
+INSERT INTO amfi_master_raw (
   scheme_code,
+  isin_payout,
+  isin_reinvest,
   scheme_name,
-  scheme_type,
-  category,
-  plan,
-  option,
   amc_code,
-  launch_date
-)
-SELECT
-  scheme_code,
-  scheme_name,
+  amc_name,
   scheme_type,
   scheme_category,
   plan,
   option,
+  launch_date,
+  closure_date
+)
+SELECT
+  scheme_code,
+  isin_payout,
+  isin_reinvest,
+  scheme_name,
   amc_code,
-  launch_date
-FROM amfi_master_raw
-WHERE scheme_code IS NOT NULL
+  amc_name,
+  scheme_type,
+  scheme_category,
+  plan,
+  option,
+  launch_date,
+  closure_date
+FROM mf.schemes
+WHERE scheme_code IS NOT NULL;
 ON CONFLICT DO NOTHING;
 
