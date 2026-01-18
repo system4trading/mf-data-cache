@@ -1,15 +1,14 @@
--- Read NAVAll.txt with headers
-CREATE OR REPLACE TABLE navall_raw AS
+DELETE FROM nav_raw;
+
+INSERT INTO nav_raw
 SELECT
-  "Scheme Code"::INTEGER              AS scheme_code,
-  STRPTIME("Date", '%d-%b-%Y')::DATE  AS nav_date,
-  "Net Asset Value"::NUMERIC          AS nav
+  column0::INTEGER                        AS scheme_code,
+  STRPTIME(column7, '%d-%b-%Y')::DATE     AS nav_date,
+  column8::NUMERIC                        AS nav
 FROM read_csv(
   'raw/navall/NAVAll.txt',
   delim=';',
-  header=true,
-  ignore_errors=true
+  header=false
 )
-WHERE
-  "Scheme Code" IS NOT NULL
-  AND "Net Asset Value" IS NOT NULL;
+WHERE column0 IS NOT NULL
+  AND column8 IS NOT NULL;
