@@ -23,7 +23,7 @@ SELECT
   a.amc_code,
   r.launch_date
 FROM amfi_master_raw r
-JOIN amc a ON r.amc_name = a.amc_name;
+JOIN mf.amc a ON r.amc_name = a.amc_name;
 
 -- NAV history
 DELETE FROM mf.mf_nav_history;
