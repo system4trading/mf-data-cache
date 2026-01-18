@@ -60,11 +60,11 @@ jobs:
           rows = con.execute("""
             SELECT 'amfi_master_raw', COUNT(*) FROM amfi_master_raw
             UNION ALL
-            SELECT 'amc', COUNT(*) FROM amc
+            SELECT 'mf,amc', COUNT(*) FROM mf.amc
             UNION ALL
-            SELECT 'mf_schemes', COUNT(*) FROM mf_schemes
+            SELECT 'mf.mf_schemes', COUNT(*) FROM mf.mf_schemes
             UNION ALL
-            SELECT 'mf_nav_history', COUNT(*) FROM mf_nav_history;
+            SELECT 'mf.mf_nav_history', COUNT(*) FROM mf.mf_nav_history;
           """).fetchall()
           for r in rows:
               print(r)
@@ -75,4 +75,5 @@ jobs:
         with:
           name: mf-historical-csv
           path: export/
+
 
