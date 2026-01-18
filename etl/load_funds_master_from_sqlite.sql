@@ -9,7 +9,7 @@ ATTACH 'funds.db' AS src (TYPE SQLITE);
 ------------------------------------------------------------
 -- 1. AMC MASTER
 ------------------------------------------------------------
-INSERT INTO amc (amc_code, amc_name)
+INSERT INTO mf.amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
     amc_name
@@ -20,7 +20,7 @@ WHERE amc_code IS NOT NULL
 ------------------------------------------------------------
 -- 2. MF SCHEME MASTER
 ------------------------------------------------------------
-INSERT INTO mf_schemes (
+INSERT INTO mf.mf_schemes (
     scheme_code,
     scheme_name,
     scheme_type,
@@ -45,8 +45,8 @@ WHERE s.scheme_code IS NOT NULL;
 ------------------------------------------------------------
 -- 3. Sanity checks (visible in DuckDB logs)
 ------------------------------------------------------------
-SELECT 'amc_loaded' AS table, COUNT(*) FROM amc;
-SELECT 'schemes_loaded' AS table, COUNT(*) FROM mf_schemes;
+SELECT 'amc_loaded' AS table, COUNT(*) FROM mf.amc;
+SELECT 'schemes_loaded' AS table, COUNT(*) FROM mf.mf_schemes;
 
 -- Cleanup
 DETACH src;
