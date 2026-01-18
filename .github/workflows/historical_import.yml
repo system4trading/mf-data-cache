@@ -36,12 +36,10 @@ jobs:
           find raw/navall | wc -l
 
       # 🔹 AMFI Scheme Master
-      - name: Download AMFI Scheme Master
+      - name: Download Scheme Master (funds.db)
         run: |
-          curl -A "Mozilla/5.0" -fsSL \
-            "https://www.amfiindia.com/spages/MFMaster.aspx" \
-            -o raw/amfi/MFMaster.txt
-          wc -l raw/amfi/MFMaster.txt
+          wget https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst
+          unzstd funds.db.zst
 
       # 🔹 Latest NAV snapshot (optional sanity check)
       - name: Download latest NAVAll
@@ -77,3 +75,4 @@ jobs:
         with:
           name: mf-historical-csv
           path: export/
+
