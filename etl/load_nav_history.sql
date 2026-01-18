@@ -1,16 +1,15 @@
--- Load NAV history from NAVAll raw data
-
-INSERT INTO nav_raw (
-  scheme_code,
-  nav_date,
-  nav
-)
+-- Read NAVAll.txt with headers
+CREATE OR REPLACE TABLE navall_raw AS
 SELECT
-  CAST(column0 AS INTEGER)                     AS scheme_code,
-  STRPTIME(column7, '%d-%b-%Y')::DATE          AS nav_date,
-  CAST(column4 AS NUMERIC)                     AS nav
-FROM navall_raw
+  "Scheme Code"::INTEGER              AS scheme_code,
+  STRPTIME("Date", '%d-%b-%Y')::DATE  AS nav_date,
+  "Net Asset Value"::NUMERIC          AS nav
+FROM read_csv(
+  'raw/navall/NAVAll.txt',
+  delim=';',
+  header=true,
+  ignore_errors=true
+)
 WHERE
-  column0 ~ '^[0-9]+$'
-  AND column4 IS NOT NULL
-  AND column4 <> 'N.A.';
+  "Scheme Code" IS NOT NULL
+  AND "Net Asset Value" IS NOT NULL;
