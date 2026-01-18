@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS nav_raw (
 );
 
 -- CANONICAL
-CREATE TABLE IF NOT EXISTS amc (
+CREATE TABLE IF NOT EXISTS mf.amc (
   amc_code INTEGER,
   amc_name TEXT
 );
 
-CREATE TABLE IF NOT EXISTS mf_schemes (
+CREATE TABLE IF NOT EXISTS mf.mf_schemes (
   scheme_code INTEGER,
   scheme_name TEXT,
   scheme_type TEXT,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS mf_schemes (
   launch_date DATE
 );
 
-CREATE TABLE IF NOT EXISTS mf_nav_history (
+CREATE TABLE IF NOT EXISTS mf.mf_nav_history (
   scheme_code INTEGER,
   nav_date DATE,
   nav NUMERIC
