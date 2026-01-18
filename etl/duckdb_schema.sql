@@ -1,42 +1,46 @@
--- RAW
-CREATE TABLE IF NOT EXISTS amfi_master_raw (
-  scheme_code INTEGER,
-  isin_payout TEXT,
-  isin_reinvest TEXT,
-  scheme_name TEXT,
-  amc_name TEXT,
-  scheme_type TEXT,
-  scheme_category TEXT,
-  plan TEXT,
-  option TEXT,
-  launch_date DATE
-);
+-- ================================
+-- DuckDB canonical schema
+-- ================================
 
-CREATE TABLE IF NOT EXISTS nav_raw (
-  scheme_code INTEGER,
-  nav_date DATE,
-  nav NUMERIC
-);
+CREATE SCHEMA IF NOT EXISTS mf;
 
--- CANONICAL
+-- ================================
+-- AMC master
+-- ================================
 CREATE TABLE IF NOT EXISTS mf.amc (
-  amc_code INTEGER,
-  amc_name TEXT
+  amc_code INTEGER PRIMARY KEY,
+  amc_name TEXT NOT NULL
 );
 
+-- ================================
+-- Mutual Fund Schemes
+-- ================================
 CREATE TABLE IF NOT EXISTS mf.mf_schemes (
-  scheme_code INTEGER,
-  scheme_name TEXT,
+  scheme_code INTEGER PRIMARY KEY,
+  scheme_name TEXT NOT NULL,
   scheme_type TEXT,
   category TEXT,
   plan TEXT,
   option TEXT,
-  amc_code INTEGER,
+  amc_code INTEGER REFERENCES mf.amc(amc_code),
   launch_date DATE
 );
 
+-- ================================
+-- NAV history
+-- ================================
 CREATE TABLE IF NOT EXISTS mf.mf_nav_history (
-  scheme_code INTEGER,
-  nav_date DATE,
-  nav NUMERIC
+  scheme_code INTEGER REFERENCES mf.mf_schemes(scheme_code),
+  nav_date DATE NOT NULL,
+  nav DOUBLE,
+  PRIMARY KEY (scheme_code, nav_date)
 );
+
+-- ================================
+-- Indexes (for performance)
+-- ================================
+CREATE INDEX IF NOT EXISTS idx_nav_date
+  ON mf.mf_nav_history(nav_date);
+
+CREATE INDEX IF NOT EXISTS idx_nav_scheme
+  ON mf.mf_nav_history(scheme_code);
