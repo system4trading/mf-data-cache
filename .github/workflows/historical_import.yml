@@ -36,13 +36,22 @@ jobs:
           cp -r temp_nav/data/* raw/navall/
           rm -rf temp_nav
 
-      - name: Download AMFI Scheme Master (NAVAll.txt)
+      - name: Download AMFI Scheme Master
         run: |
           mkdir -p raw/amfi
-
-          curl -fsSL \
+          curl -A "Mozilla/5.0" -fsSL \
             "https://www.amfiindia.com/spages/MFMaster.aspx" \
             -o raw/amfi/MFMaster.txt
+          echo "Lines in MFMaster:"
+          wc -l raw/amfi/MFMaster.txt
+
+      - name: Download NAVAll
+        run: |
+          mkdir -p raw/navall
+          curl -A "Mozilla/5.0" -fsSL \
+            https://www.amfiindia.com/spages/NAVAll.txt \
+            -o raw/navall/NAVAll.txt
+          wc -l raw/navall/NAVAll.txt
 
       - name: Run DuckDB ETL
         run: python etl/run_etl.py
@@ -52,6 +61,7 @@ jobs:
         with:
           name: mf-historical-csv
           path: export/
+
 
 
 
