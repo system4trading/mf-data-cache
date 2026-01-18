@@ -23,45 +23,57 @@ jobs:
       - name: Prepare directories
         run: |
           mkdir -p raw/navall
+          mkdir -p raw/amfi
           mkdir -p export
 
-      - name: Download AMFI Scheme Master
-        run: |
-          wget https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst
-          unzstd funds.db.zst
-
+      # 🔹 Historical NAV (2006 → present)
       - name: Download historical NAVALL (2006 → present)
         run: |
           git clone --depth 1 https://github.com/captn3m0/historical-mf-data temp_nav
           cp -r temp_nav/data/* raw/navall/
           rm -rf temp_nav
+          echo "Historical NAV files:"
+          find raw/navall | wc -l
 
+      # 🔹 AMFI Scheme Master
       - name: Download AMFI Scheme Master
         run: |
-          mkdir -p raw/amfi
           curl -A "Mozilla/5.0" -fsSL \
             "https://www.amfiindia.com/spages/MFMaster.aspx" \
             -o raw/amfi/MFMaster.txt
-          echo "Lines in MFMaster:"
           wc -l raw/amfi/MFMaster.txt
 
-      - name: Download NAVAll
+      # 🔹 Latest NAV snapshot (optional sanity check)
+      - name: Download latest NAVAll
         run: |
-          mkdir -p raw/navall
           curl -A "Mozilla/5.0" -fsSL \
             https://www.amfiindia.com/spages/NAVAll.txt \
-            -o raw/navall/NAVAll.txt
-          wc -l raw/navall/NAVAll.txt
+            -o raw/navall/NAVAll_latest.txt
+          wc -l raw/navall/NAVAll_latest.txt
 
       - name: Run DuckDB ETL
         run: python etl/run_etl.py
+
+      - name: Verify row counts
+        run: |
+          python - <<'EOF'
+          import duckdb
+          con = duckdb.connect("analytics.duckdb")
+          rows = con.execute("""
+            SELECT 'amfi_master_raw', COUNT(*) FROM amfi_master_raw
+            UNION ALL
+            SELECT 'amc', COUNT(*) FROM amc
+            UNION ALL
+            SELECT 'mf_schemes', COUNT(*) FROM mf_schemes
+            UNION ALL
+            SELECT 'mf_nav_history', COUNT(*) FROM mf_nav_history;
+          """).fetchall()
+          for r in rows:
+              print(r)
+          EOF
 
       - name: Upload CSV artifacts
         uses: actions/upload-artifact@v4
         with:
           name: mf-historical-csv
           path: export/
-
-
-
-
