@@ -1,7 +1,7 @@
 -- AMC
-DELETE FROM amc;
+DELETE FROM mf.amc;
 
-INSERT INTO amc
+INSERT INTO mf.amc
 SELECT
   dense_rank() OVER (ORDER BY amc_name),
   amc_name
@@ -10,9 +10,9 @@ FROM (
 ) t;
 
 -- Schemes
-DELETE FROM mf_schemes;
+DELETE FROM mf.mf_schemes;
 
-INSERT INTO mf_schemes
+INSERT INTO mf.mf_schemes
 SELECT
   r.scheme_code,
   r.scheme_name,
