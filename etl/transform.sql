@@ -26,9 +26,9 @@ FROM amfi_master_raw r
 JOIN amc a ON r.amc_name = a.amc_name;
 
 -- NAV history
-DELETE FROM mf_nav_history;
+DELETE FROM mf.mf_nav_history;
 
-INSERT INTO mf_nav_history
+INSERT INTO mf.mf_nav_history
 SELECT
   scheme_code,
   nav_date,
