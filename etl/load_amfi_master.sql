@@ -1,16 +1,17 @@
--- Read raw AMFI master
-CREATE OR REPLACE TABLE amfi_master_raw AS
+DELETE FROM amfi_master_raw;
+
+INSERT INTO amfi_master_raw
 SELECT
-  column0::INTEGER          AS scheme_code,
-  column1                  AS isin_payout,
-  column2                  AS isin_reinvest,
-  column3                  AS scheme_name,
-  column4                  AS amc_name,
-  column5                  AS scheme_type,
-  column6                  AS scheme_category,
-  column7                  AS plan,
-  column8                  AS option,
-  STRPTIME(column9, '%d-%b-%Y')::DATE AS launch_date
+  column0::INTEGER,
+  column1,
+  column2,
+  column3,
+  column4,
+  column5,
+  column6,
+  column7,
+  column8,
+  STRPTIME(column9, '%d-%b-%Y')::DATE
 FROM read_csv(
   'raw/amfi/MFMaster.txt',
   delim='|',
