@@ -2,7 +2,7 @@
 -- DuckDB canonical schema
 -- ================================
 
-CREATE SCHEMA IF NOT EXISTS mf.mf;
+CREATE SCHEMA IF NOT EXISTS mf;
 
 -- ================================
 -- AMC master
