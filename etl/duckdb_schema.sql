@@ -1,32 +1,24 @@
--- ============================
--- RAW TABLES (DuckDB)
--- ============================
-
+-- RAW
 CREATE TABLE IF NOT EXISTS amfi_master_raw (
   scheme_code INTEGER,
   isin_payout TEXT,
   isin_reinvest TEXT,
   scheme_name TEXT,
-  amc_code INTEGER,
   amc_name TEXT,
   scheme_type TEXT,
   scheme_category TEXT,
   plan TEXT,
   option TEXT,
-  launch_date DATE,
-  closure_date DATE
+  launch_date DATE
 );
 
 CREATE TABLE IF NOT EXISTS nav_raw (
   scheme_code INTEGER,
   nav_date DATE,
-  nav DOUBLE
+  nav NUMERIC
 );
 
--- ============================
--- CANONICAL TABLES (DuckDB)
--- ============================
-
+-- CANONICAL
 CREATE TABLE IF NOT EXISTS amc (
   amc_code INTEGER,
   amc_name TEXT
@@ -46,5 +38,5 @@ CREATE TABLE IF NOT EXISTS mf_schemes (
 CREATE TABLE IF NOT EXISTS mf_nav_history (
   scheme_code INTEGER,
   nav_date DATE,
-  nav DOUBLE
+  nav NUMERIC
 );
