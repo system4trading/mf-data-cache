@@ -1,24 +1,40 @@
 import duckdb
-from pathlib import Path
+import os
 
-con = duckdb.connect("analytics.duckdb")
+DB_PATH = "mf.duckdb"
 
-sql_files = [
-    "etl/duckdb_schema.sql",        # 👈 MUST be first
+SQL_STEPS = [
+    "etl/duckdb_schema.sql",
     "etl/load_funds_master_from_sqlite.sql",
     "etl/load_nav_history.sql",
     "etl/transform.sql",
-    "etl/export_to_csv.sql"
+    "etl/export_to_csv.sql",
 ]
 
-SELECT 'amc', COUNT(*) FROM amc
-UNION ALL
-SELECT 'mf_schemes', COUNT(*) FROM mf_schemes;
-
-for sql in sql_files:
-    print(f"▶ Running {sql}")
-    with open(sql) as f:
+def run_sql(con, path):
+    print(f"▶ Running {path}")
+    with open(path, "r", encoding="utf-8") as f:
         con.execute(f.read())
 
-con.close()
-print("✅ ETL complete")
+def main():
+    print("🦆 Starting DuckDB ETL")
+
+    # Fresh DB each run
+    if os.path.exists(DB_PATH):
+        os.remove(DB_PATH)
+
+    con = duckdb.connect(DB_PATH)
+
+    try:
+        for sql in SQL_STEPS:
+            if not os.path.exists(sql):
+                raise FileNotFoundError(f"Missing SQL file: {sql}")
+            run_sql(con, sql)
+
+        print("✅ ETL complete")
+
+    finally:
+        con.close()
+
+if __name__ == "__main__":
+    main()
