@@ -5,4 +5,4 @@ SELECT
   nav
 FROM nav_raw
 WHERE scheme_code IN (SELECT scheme_code FROM mf_schemes)
-ON CONFLICT DO NOTHING;
+
