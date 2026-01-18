@@ -45,8 +45,8 @@ WHERE s.scheme_code IS NOT NULL;
 ------------------------------------------------------------
 -- 3. Sanity checks (visible in DuckDB logs)
 ------------------------------------------------------------
-SELECT 'amc_loaded' AS table, COUNT(*) FROM mf.amc;
-SELECT 'schemes_loaded' AS table, COUNT(*) FROM mf.mf_schemes;
+SELECT 'amc_loaded' AS table, COUNT(*) FROM src.amc;
+SELECT 'schemes_loaded' AS table, COUNT(*) FROM src.mf_schemes;
 
 -- Cleanup
 DETACH src;
