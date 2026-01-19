@@ -4,10 +4,10 @@
 -- ---------------------------------------------------------
 
 -- Clear existing NAV history
-DELETE FROM mf.mf_nav_history;
+DELETE FROM core.mf_nav_history;
 
 -- Load ALL historical NAV files
-INSERT INTO mf.mf_nav_history (
+INSERT INTO core.mf_nav_history (
     scheme_code,
     nav_date,
     nav
