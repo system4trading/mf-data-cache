@@ -1,38 +1,41 @@
 -- ---------------------------------------------------------
--- DuckDB canonical schema (NO SQLite here)
+-- DuckDB canonical schema (NO ambiguity)
 -- ---------------------------------------------------------
 
--- Always create schema explicitly
-CREATE SCHEMA IF NOT EXISTS mf;
+-- Drop schema if re-running (safe in CI)
+DROP SCHEMA IF EXISTS core CASCADE;
+
+-- Create clean schema
+CREATE SCHEMA core;
 
 ------------------------------------------------------------
--- AMC master
+-- AMC MASTER
 ------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS mf.amc (
+CREATE TABLE core.amc (
     amc_code INTEGER PRIMARY KEY,
     amc_name TEXT NOT NULL
 );
 
 ------------------------------------------------------------
--- Mutual fund schemes
+-- MF SCHEME MASTER
 ------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS mf.mf_schemes (
+CREATE TABLE core.mf_schemes (
     scheme_code INTEGER PRIMARY KEY,
     scheme_name TEXT NOT NULL,
     scheme_type TEXT,
     category TEXT,
     plan TEXT,
     option TEXT,
-    amc_code INTEGER,
+    amc_code INTEGER REFERENCES core.amc(amc_code),
     launch_date DATE
 );
 
 ------------------------------------------------------------
--- NAV history
+-- NAV HISTORY
 ------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS mf.mf_nav_history (
-    scheme_code INTEGER,
+CREATE TABLE core.mf_nav_history (
+    scheme_code INTEGER REFERENCES core.mf_schemes(scheme_code),
     nav_date DATE,
-    nav NUMERIC,
+    nav DOUBLE,
     PRIMARY KEY (scheme_code, nav_date)
 );
