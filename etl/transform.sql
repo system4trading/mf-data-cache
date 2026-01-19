@@ -1,7 +1,7 @@
 -- AMC
-DELETE FROM mf.amc;
+DELETE FROM core.amc;
 
-INSERT INTO mf.amc
+INSERT INTO core.amc
 SELECT
   dense_rank() OVER (ORDER BY amc_name),
   amc_name
@@ -10,9 +10,9 @@ FROM (
 ) t;
 
 -- Schemes
-DELETE FROM mf.mf_schemes;
+DELETE FROM core.mf_schemes;
 
-INSERT INTO mf.mf_schemes
+INSERT INTO core.mf_schemes
 SELECT
   r.scheme_code,
   r.scheme_name,
@@ -26,9 +26,9 @@ FROM amfi_master_raw r
 JOIN mf.amc a ON r.amc_name = a.amc_name;
 
 -- NAV history
-DELETE FROM mf.mf_nav_history;
+DELETE FROM core.mf_nav_history;
 
-INSERT INTO mf.mf_nav_history
+INSERT INTO core.mf_nav_history
 SELECT
   scheme_code,
   nav_date,
