@@ -22,26 +22,23 @@ jobs:
 
       - name: Prepare directories
         run: |
-          mkdir -p raw/navall
-          mkdir -p raw/amfi
-          mkdir -p export
+          mkdir -p raw/navall raw/amfi export
 
-      # 🔹 Historical NAV (2006 → present)
+      # Historical NAV (2006 → present)
       - name: Download historical NAVALL (2006 → present)
         run: |
           git clone --depth 1 https://github.com/captn3m0/historical-mf-data temp_nav
           cp -r temp_nav/data/* raw/navall/
           rm -rf temp_nav
-          echo "Historical NAV files:"
           find raw/navall | wc -l
 
-      # 🔹 AMFI Scheme Master
+      # Scheme Master
       - name: Download Scheme Master (funds.db)
         run: |
           wget https://github.com/captn3m0/historical-mf-data/releases/latest/download/funds.db.zst
           unzstd funds.db.zst
 
-      # 🔹 Latest NAV snapshot (optional sanity check)
+      # Latest NAV snapshot (optional)
       - name: Download latest NAVAll
         run: |
           curl -A "Mozilla/5.0" -fsSL \
@@ -58,9 +55,7 @@ jobs:
           import duckdb
           con = duckdb.connect("analytics.duckdb")
           rows = con.execute("""
-            SELECT 'amfi_master_raw', COUNT(*) FROM amfi_master_raw
-            UNION ALL
-            SELECT 'mf,amc', COUNT(*) FROM mf.amc
+            SELECT 'mf.amc', COUNT(*) FROM mf.amc
             UNION ALL
             SELECT 'mf.mf_schemes', COUNT(*) FROM mf.mf_schemes
             UNION ALL
@@ -75,5 +70,3 @@ jobs:
         with:
           name: mf-historical-csv
           path: export/
-
-
