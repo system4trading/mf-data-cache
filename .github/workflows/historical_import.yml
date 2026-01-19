@@ -55,11 +55,11 @@ jobs:
           import duckdb
           con = duckdb.connect("analytics.duckdb")
           rows = con.execute("""
-            SELECT 'mf.amc', COUNT(*) FROM mf.amc
+            SELECT 'core.amc', COUNT(*) FROM core.amc
             UNION ALL
-            SELECT 'mf.mf_schemes', COUNT(*) FROM mf.mf_schemes
+            SELECT 'core.mf_schemes', COUNT(*) FROM core.mf_schemes
             UNION ALL
-            SELECT 'mf.mf_nav_history', COUNT(*) FROM mf.mf_nav_history;
+            SELECT 'core.mf_nav_history', COUNT(*) FROM core.mf_nav_history;
           """).fetchall()
           for r in rows:
               print(r)
@@ -70,3 +70,4 @@ jobs:
         with:
           name: mf-historical-csv
           path: export/
+
