@@ -1,11 +1,11 @@
 COPY (
-  SELECT * FROM mf.amc
+  SELECT * FROM core.amc
 ) TO 'export/amc.csv' (HEADER, DELIMITER ',');
 
 COPY (
-  SELECT * FROM mf.mf_schemes
+  SELECT * FROM core.mf_schemes
 ) TO 'export/mf_schemes.csv' (HEADER, DELIMITER ',');
 
 COPY (
-  SELECT * FROM mf.mf_nav_history
+  SELECT * FROM core.mf_nav_history
 ) TO 'export/mf_nav_history.csv' (HEADER, DELIMITER ',');
