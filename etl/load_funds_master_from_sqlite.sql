@@ -2,7 +2,7 @@ SET schema 'analytics.core';
 
 ATTACH 'funds.db' AS src (TYPE SQLITE);
 
-INSERT INTO amc (amc_code, amc_name)
+INSERT INTO core.amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
     amc_name
@@ -10,7 +10,7 @@ FROM src.amc
 WHERE amc_code IS NOT NULL
   AND amc_name IS NOT NULL;
 
-INSERT INTO mf_schemes (
+INSERT INTO core.mf_schemes (
     scheme_code,
     scheme_name,
     scheme_type,
