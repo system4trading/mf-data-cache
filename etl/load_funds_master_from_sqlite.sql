@@ -1,14 +1,7 @@
-SET schema 'core';
-
--- ---------------------------------------------------------
--- Load AMFI Scheme Master from captn3m0 funds.db (SQLite)
--- ---------------------------------------------------------
+SET schema 'analytics.core';
 
 ATTACH 'funds.db' AS src (TYPE SQLITE);
 
-------------------------------------------------------------
--- 1. AMC MASTER
-------------------------------------------------------------
 INSERT INTO amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
@@ -17,9 +10,6 @@ FROM src.amc
 WHERE amc_code IS NOT NULL
   AND amc_name IS NOT NULL;
 
-------------------------------------------------------------
--- 2. MF SCHEME MASTER
-------------------------------------------------------------
 INSERT INTO mf_schemes (
     scheme_code,
     scheme_name,
