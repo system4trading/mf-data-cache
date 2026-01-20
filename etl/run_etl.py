@@ -28,6 +28,7 @@ def main():
         os.remove(DB_PATH)
 
     con = duckdb.connect(DB_PATH)
+    con.execute("SET schema 'core'")
 
     try:
         for sql in SQL_STEPS:
