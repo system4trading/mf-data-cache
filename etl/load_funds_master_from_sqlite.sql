@@ -4,9 +4,9 @@
 
 ATTACH 'funds.db' AS src (TYPE SQLITE);
 
-------------------------------------------------------------
+-- ---------------------------------------------------------
 -- AMC MASTER
-------------------------------------------------------------
+-- ---------------------------------------------------------
 INSERT INTO core.amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
@@ -15,9 +15,9 @@ FROM src.amc
 WHERE amc_code IS NOT NULL
   AND amc_name IS NOT NULL;
 
-------------------------------------------------------------
+-- ---------------------------------------------------------
 -- MF SCHEME MASTER
-------------------------------------------------------------
+-- ---------------------------------------------------------
 INSERT INTO core.mf_schemes (
     scheme_code,
     scheme_name,
@@ -39,11 +39,5 @@ SELECT DISTINCT
     s.launch_date
 FROM src.schemes s
 WHERE s.scheme_code IS NOT NULL;
-
-------------------------------------------------------------
--- Sanity logs
-------------------------------------------------------------
-SELECT 'amc_loaded', COUNT(*) FROM core.amc;
-SELECT 'schemes_loaded', COUNT(*) FROM core.mf_schemes;
 
 DETACH src;
