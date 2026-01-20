@@ -1,3 +1,7 @@
+import os
+if os.path.exists("analytics.duckdb"):
+    os.remove("analytics.duckdb")
+
 import duckdb
 import os
 
