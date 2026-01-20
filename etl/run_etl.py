@@ -1,14 +1,10 @@
 import os
-if os.path.exists("analytics.duckdb"):
-    os.remove("analytics.duckdb")
-
 import duckdb
-import os
 
 DB_PATH = "analytics.duckdb"
 
 SQL_STEPS = [
-    "etl/duckdb_schema.sql",
+    "etl/duckdb_schema.sql",                 # creates schema + tables
     "etl/load_funds_master_from_sqlite.sql",
     "etl/load_nav_history.sql",
     "etl/transform.sql",
@@ -28,10 +24,16 @@ def main():
         os.remove(DB_PATH)
 
     con = duckdb.connect(DB_PATH)
-    con.execute("SET schema 'core'")
 
     try:
-        for sql in SQL_STEPS:
+        # 1️⃣ Create schema & tables FIRST
+        run_sql(con, "etl/duckdb_schema.sql")
+
+        # 2️⃣ Now set default schema
+        con.execute("SET schema='core'")
+
+        # 3️⃣ Run remaining steps
+        for sql in SQL_STEPS[1:]:
             if not os.path.exists(sql):
                 raise FileNotFoundError(f"Missing SQL file: {sql}")
             run_sql(con, sql)
