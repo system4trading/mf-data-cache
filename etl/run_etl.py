@@ -24,7 +24,8 @@ def main():
         os.remove(DB_PATH)
 
     con = duckdb.connect(DB_PATH)
-
+    con.execute("SET schema 'core'")
+    
     try:
         # 1️⃣ Create schema & tables FIRST
         run_sql(con, "etl/duckdb_schema.sql")
