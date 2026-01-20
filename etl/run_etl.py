@@ -5,7 +5,7 @@ if os.path.exists("analytics.duckdb"):
 import duckdb
 import os
 
-DB_PATH = "mf.duckdb"
+DB_PATH = "analytics.duckdb"
 
 SQL_STEPS = [
     "etl/duckdb_schema.sql",
