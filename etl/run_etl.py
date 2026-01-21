@@ -1,10 +1,9 @@
 def main():
     print("🦆 Starting DuckDB ETL")
 
-    if os.path.exists(DB_PATH):
-        os.remove(DB_PATH)
+    DB_PATH = os.path.abspath("analytics.duckdb")
 
-    con = duckdb.connect(DB_PATH)
+    con = duckdb.connect(os.path.abspath("analytics.duckdb"))
 
     try:
         # 1. Create schema + tables
