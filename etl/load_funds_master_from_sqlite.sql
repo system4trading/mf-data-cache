@@ -38,7 +38,7 @@ SELECT DISTINCT
     option,
     amc_code,
     launch_date
-FROM src.schemes
+FROM src.mf_schemes
 WHERE scheme_code IS NOT NULL;
 
 -- ---------------------------------------------------------
