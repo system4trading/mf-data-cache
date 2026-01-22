@@ -24,28 +24,6 @@ def main():
 
     con = duckdb.connect(DB_PATH)
     
-Verify row counts
-    run: |
-        python - <<'EOF'
-        import duckdb, os
-
-        db = os.path.abspath("analytics.duckdb")
-        con = duckdb.connect(db)
-
-        rows = con.execute("""
-          SELECT 'amc', COUNT(*) FROM amc
-          UNION ALL
-          SELECT 'mf_schemes', COUNT(*) FROM mf_schemes
-          UNION ALL
-          SELECT 'mf_nav_history', COUNT(*) FROM mf_nav_history;
-        """).fetchall()
-
-        for r in rows:
-            print(r)
-
-        con.close()
-        EOF
-
     try:
         for sql in SQL_STEPS:
             run_sql(con, sql)
