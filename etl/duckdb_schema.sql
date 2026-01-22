@@ -3,13 +3,13 @@
 -- ===============================
 
 -- AMC MASTER
-CREATE TABLE amc (
+CREATE TABLE analytics.amc (
     amc_code INTEGER PRIMARY KEY,
     amc_name TEXT NOT NULL
 );
 
 -- MF SCHEME MASTER
-CREATE TABLE mf_schemes (
+CREATE TABLE analytics.mf_schemes (
     scheme_code INTEGER PRIMARY KEY,
     scheme_name TEXT NOT NULL,
     scheme_type TEXT,
@@ -21,14 +21,14 @@ CREATE TABLE mf_schemes (
 );
 
 -- NAV RAW (staging)
-CREATE TABLE nav_raw (
+CREATE TABLE analytics.nav_raw (
     scheme_code INTEGER,
     nav_date DATE,
     nav DOUBLE
 );
 
 -- FINAL NAV HISTORY
-CREATE TABLE mf_nav_history (
+CREATE TABLE analytics.mf_nav_history (
     scheme_code INTEGER,
     nav_date DATE,
     nav DOUBLE,
