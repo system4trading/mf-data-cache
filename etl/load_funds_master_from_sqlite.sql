@@ -1,24 +1,19 @@
--- =========================================================
--- Load AMFI Scheme Master from captn3m0 funds.db (SQLite)
--- =========================================================
+-- ------------------------------------------
+-- Load AMFI Scheme Master from funds.db
+-- ------------------------------------------
 
--- Attach SQLite database
-ATTACH 'funds.db' (TYPE SQLITE);
+ATTACH 'funds.db' AS src (TYPE SQLITE);
 
--- ---------------------------------------------------------
 -- AMC MASTER
--- ---------------------------------------------------------
 INSERT INTO amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
     amc_name
-FROM amc
+FROM src.amc
 WHERE amc_code IS NOT NULL
   AND amc_name IS NOT NULL;
 
--- ---------------------------------------------------------
 -- MF SCHEME MASTER
--- ---------------------------------------------------------
 INSERT INTO mf_schemes (
     scheme_code,
     scheme_name,
@@ -38,10 +33,7 @@ SELECT DISTINCT
     option,
     amc_code,
     launch_date
-FROM mf_schemes
+FROM src.schemes
 WHERE scheme_code IS NOT NULL;
 
--- ---------------------------------------------------------
--- Cleanup
--- ---------------------------------------------------------
-DETACH 'funds.db' (TYPE SQLITE);
+DETACH src;
