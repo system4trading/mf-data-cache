@@ -14,7 +14,7 @@ WHERE amc_code IS NOT NULL
   AND amc_name IS NOT NULL;
 
 -- MF SCHEME MASTER
-INSERT INTO mf_schemes (
+INSERT INTO analytics.mf_schemes (
     scheme_code,
     scheme_name,
     scheme_type,
