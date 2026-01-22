@@ -31,11 +31,11 @@ def main():
 
         print("\n📊 Final row counts:")
         rows = con.execute("""
-            SELECT 'amc', COUNT(*) FROM amc
+            SELECT 'analytics.amc', COUNT(*) FROM analytics.amc
             UNION ALL
-            SELECT 'mf_schemes', COUNT(*) FROM mf_schemes
+            SELECT 'analytics.mf_schemes', COUNT(*) FROM analytics.mf_schemes
             UNION ALL
-            SELECT 'mf_nav_history', COUNT(*) FROM mf_nav_history;
+            SELECT 'analytics.mf_nav_history', COUNT(*) FROM analytics.mf_nav_history;
         """).fetchall()
 
         for r in rows:
