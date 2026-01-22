@@ -3,7 +3,7 @@
 -- =========================================================
 
 -- Attach SQLite database
-ATTACH 'funds.db' AS src (TYPE SQLITE);
+ATTACH 'funds.db' (TYPE SQLITE);
 
 -- ---------------------------------------------------------
 -- AMC MASTER
@@ -12,7 +12,7 @@ INSERT INTO amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
     amc_name
-FROM src.amc
+FROM amc
 WHERE amc_code IS NOT NULL
   AND amc_name IS NOT NULL;
 
@@ -38,10 +38,10 @@ SELECT DISTINCT
     option,
     amc_code,
     launch_date
-FROM src.mf_schemes
+FROM mf_schemes
 WHERE scheme_code IS NOT NULL;
 
 -- ---------------------------------------------------------
 -- Cleanup
 -- ---------------------------------------------------------
-DETACH src;
+DETACH 'funds.db' (TYPE SQLITE);
