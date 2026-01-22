@@ -8,7 +8,7 @@ ATTACH 'funds.db' AS src (TYPE SQLITE);
 -- ---------------------------------------------------------
 -- AMC MASTER
 -- ---------------------------------------------------------
-INSERT INTO core.amc (amc_code, amc_name)
+INSERT INTO amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
     amc_name
@@ -19,7 +19,7 @@ WHERE amc_code IS NOT NULL
 -- ---------------------------------------------------------
 -- MF SCHEME MASTER
 -- ---------------------------------------------------------
-INSERT INTO core.mf_schemes (
+INSERT INTO mf_schemes (
     scheme_code,
     scheme_name,
     scheme_type,
