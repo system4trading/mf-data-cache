@@ -2,7 +2,7 @@
 -- DuckDB Core Schema (Authoritative)
 -- ===============================
 
-CREATE SCHEMA IF NOT EXISTS core;
+CREATE SCHEMA IF NOT EXISTS;
 
 ------------------------------------------------------------
 -- CORE TABLES (single source of truth)
