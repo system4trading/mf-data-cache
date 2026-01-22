@@ -1,19 +1,15 @@
 -- ===============================
--- DuckDB Core Schema (Authoritative)
+-- DuckDB Schema (FLAT, FINAL)
 -- ===============================
 
-CREATE SCHEMA IF NOT EXISTS core;
-
-------------------------------------------------------------
--- CORE TABLES (single source of truth)
-------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS amc (
+-- AMC MASTER
+CREATE TABLE amc (
     amc_code INTEGER PRIMARY KEY,
     amc_name TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS mf_schemes (
+-- MF SCHEME MASTER
+CREATE TABLE mf_schemes (
     scheme_code INTEGER PRIMARY KEY,
     scheme_name TEXT NOT NULL,
     scheme_type TEXT,
@@ -24,32 +20,17 @@ CREATE TABLE IF NOT EXISTS mf_schemes (
     launch_date DATE
 );
 
-CREATE TABLE IF NOT EXISTS mf_nav_history (
+-- NAV RAW (staging)
+CREATE TABLE nav_raw (
     scheme_code INTEGER,
     nav_date DATE,
-    nav NUMERIC,
+    nav DOUBLE
+);
+
+-- FINAL NAV HISTORY
+CREATE TABLE mf_nav_history (
+    scheme_code INTEGER,
+    nav_date DATE,
+    nav DOUBLE,
     PRIMARY KEY (scheme_code, nav_date)
 );
-
-------------------------------------------------------------
--- STAGING
-------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS nav_raw (
-    scheme_code INTEGER,
-    nav_date DATE,
-    nav NUMERIC
-);
-
-------------------------------------------------------------
--- 🔒 COMPATIBILITY VIEWS (THIS SOLVES EVERYTHING)
-------------------------------------------------------------
-
-CREATE OR REPLACE VIEW amc AS
-SELECT * FROM amc;
-
-CREATE OR REPLACE VIEW mf_schemes AS
-SELECT * FROM mf_schemes;
-
-CREATE OR REPLACE VIEW mf_nav_history AS
-SELECT * FROM mf_nav_history;
