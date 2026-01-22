@@ -24,7 +24,7 @@ def main():
 
     con = duckdb.connect(DB_PATH)
     
-- name: Verify row counts
+Verify row counts
     run: |
         python - <<'EOF'
         import duckdb, os
