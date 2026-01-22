@@ -7,6 +7,7 @@ SQL_STEPS = [
     "etl/duckdb_schema.sql",
     "etl/load_funds_master_from_sqlite.sql",
     "etl/load_nav_history.sql",
+    "etl/transform.sql",
     "etl/export_to_csv.sql",
 ]
 
