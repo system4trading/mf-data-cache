@@ -5,7 +5,7 @@
 ATTACH 'funds.db' AS src (TYPE SQLITE);
 
 -- AMC MASTER
-INSERT INTO amc (amc_code, amc_name)
+INSERT INTO analytics.amc (amc_code, amc_name)
 SELECT DISTINCT
     amc_code,
     amc_name
